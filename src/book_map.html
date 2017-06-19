@@ -18,17 +18,7 @@
                             <table style="width: 100%; max-width: 300px; font-size: 13px; margin: 0; margin-top: 11px; border: 0; padding: 0;" cellspacing="0"
                                 cellpadding="0">
                                 <tbody>
-                                    <tr style="width: 100%;">
-                                        <td style="width: 25%; margin: 0; border: 0; padding: 0; display: none;" align="center" valign="middle">
-                                            <div id="condiv" onclick="UIcontrol.loadProtag();" style="height: 26px; line-height: 22px; text-align: center; width: 60%; min-width: 35px; border: 2px solid #a79e8d; border-radius: 12px; background-color: #ffffff;">标签</div>
-                                        </td>
-                                        <td style="width: 25%; margin: 0; border: 0; padding: 0;" align="center" valign="middle">
-                                            <div id="prodiv" onclick="UIcontrol.loadProtag();" style="height: 26px; line-height: 22px; text-align: center; width: 60%; min-width: 35px; border: 2px solid #a79e8d; border-radius: 12px; background-color: #ffffff;">地域</div>
-                                        </td>
-                                        <td style="width: 25%; margin: 0; border: 0; padding: 0;" align="center" valign="middle">
-                                            <div id="seadiv" onclick="UIcontrol.loadSearch();" style="height: 26px; line-height: 22px; text-align: center; width: 60%; min-width: 35px; border: 2px solid #a79e8d; border-radius: 12px; background-color: #ffffff;">查找</div>
-                                        </td>
-                                        <td style="max-width: 50px; margin: 0; border: 0; padding: 0;">&nbsp;</td>
+                                    <tr style="width: 100%;" id="top-tag">
                                     </tr>
                                 </tbody>
                             </table>
@@ -1283,9 +1273,17 @@
                     url: "https://book.douban.com/subject/26312905/",
                     content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-129.jpg"
                 },
-            ]
+            ];
+            var search_author_text = "推荐者：";
             </script>
-            <script src="js/book_map.js"></script>
+            <script src="js/lookcn_map.js"></script>
+            <script >
+                UIcontrol.initMap(false, true, true);
+                window.onresize = function () {
+                    UIcontrol.reSizeDivs();
+                    setTimeout("UIcontrol.reDrawMap()", 501);
+                };
+            </script>
 
     [markdown] ##### 0504更新：当前收录书籍已超过** 130 **本，其中有** 102 **本完成地图定位。 ##### 如果想集中浏览已录入的书籍，请访问[【荐书清单】](http://lookcn.org/book-index/)
     *** [/markdown]

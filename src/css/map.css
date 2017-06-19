@@ -32,3 +32,14 @@
     background-color: rgba(167, 158, 141, 0.8);
     color: rgb(255, 255, 255);
 }
+
+.top-tag-div {
+    height: 26px; 
+    line-height: 22px; 
+    text-align: center; 
+    width: 60%; 
+    min-width: 35px; 
+    border: 2px solid #a79e8d;
+    border-radius: 12px; 
+    background-color: #ffffff;
+}

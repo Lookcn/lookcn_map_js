@@ -1,3 +1,6 @@
+if (typeof this.search_author_text === 'undefined') {
+    var search_author_text = "作者："
+}
 var Mapdata = {
     addressPoints: this.address_points,
     indexs: null,
@@ -623,7 +626,7 @@ var UIcontrol = {
             divrightBar.style.marginRight = "-" + (clw - 2) + "px";
         }
     },
-    initMap: function () {
+    initMap: function (contag = true, protag = true, searchtag = true) {
         var preFullPageStatus = this.fullPageStatus
         var preRightBarStatus = this.rightBarStatus
         if (767 > window.innerWidth && preFullPageStatus === "NORM") {
@@ -638,7 +641,7 @@ var UIcontrol = {
                 //'http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineStreetColor/MapServer/tile/{z}/{y}/{x}', {
                 //<a href="http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineStreetColor/MapServer">ArcGIS</a>
                 minZoom: 3,
-                maxZoom: 10,
+                maxZoom: 16,
                 attribution: '<a href="http://ditu.amap.com/">高德地图</a> &copy;'
             });
         this.map = L.map('map', {
@@ -652,7 +655,72 @@ var UIcontrol = {
         this.conTagStatus = "ALL";
         //                    Mapdata.loaddata();
         this.updateMap();
-        this.loadContag(this.proTagStatus);
+        if (contag) {
+            var top_tag = document.getElementById("top-tag");
+            var tag_td = document.createElement("td");
+            tag_td.style.width = "25%";
+            tag_td.style.padding = "0";
+            tag_td.style.margin = "0";
+            tag_td.style.border = "0";
+            tag_td.align = "center";
+            tag_td.vAlign = "middle";
+            var tag_div = document.createElement("div");
+            tag_div.setAttribute("id", "condiv");
+            tag_div.setAttribute("onclick", "UIcontrol.loadContag();");
+            tag_div.setAttribute("class", "top-tag-div");
+            tag_div.textContent = "标签";
+            tag_td.appendChild(tag_div);
+            top_tag.appendChild(tag_td);
+        };
+        if (protag) {
+            var top_tag = document.getElementById("top-tag");
+            var tag_td = document.createElement("td");
+            tag_td.style.width = "25%";
+            tag_td.style.padding = "0";
+            tag_td.style.margin = "0";
+            tag_td.style.border = "0";
+            tag_td.align = "center";
+            tag_td.vAlign = "middle";
+            var tag_div = document.createElement("div");
+            tag_div.setAttribute("id", "prodiv");
+            tag_div.setAttribute("onclick", "UIcontrol.loadProtag();");
+            tag_div.setAttribute("class", "top-tag-div");
+            tag_div.textContent = "地域";
+            tag_td.appendChild(tag_div);
+            top_tag.appendChild(tag_td);
+        };
+        if (searchtag) {
+            var top_tag = document.getElementById("top-tag");
+            var tag_td = document.createElement("td");
+            tag_td.style.width = "25%";
+            tag_td.style.padding = "0";
+            tag_td.style.margin = "0";
+            tag_td.style.border = "0";
+            tag_td.align = "center";
+            tag_td.vAlign = "middle";
+            var tag_div = document.createElement("div");
+            tag_div.setAttribute("id", "seadiv");
+            tag_div.setAttribute("onclick", "UIcontrol.loadSearch();");
+            tag_div.setAttribute("class", "top-tag-div");
+            tag_div.textContent = "查找";
+            tag_td.appendChild(tag_div);
+            top_tag.appendChild(tag_td);
+        };
+        var top_tag = document.getElementById("top-tag");
+        var tag_td = document.createElement("td");
+        tag_td.style.maxWidth = "50px";
+        tag_td.style.padding = "0";
+        tag_td.style.margin = "0";
+        tag_td.style.border = "0";
+        tag_td.textContent = " ";
+        top_tag.appendChild(tag_td);
+        if (contag) {
+            this.loadContag(this.proTagStatus);
+        } else if (protag) {
+            this.loadProtag(this.proTagStatus);
+        } else {
+            this.loadSearch();
+        }
         this.updateBottom();
     },
     updateMap: function () {
@@ -670,6 +738,8 @@ var UIcontrol = {
             popdiv.style.position = "relative";
             popdiv.style.borderTop = "7px solid #ffffff";
             popdiv.style.cursor = "pointer";
+            popdiv.style.maxHeight = "150px";
+            popdiv.style.overflowY = "hidden";
             var popimg = document.createElement("img");
             popimg.setAttribute("width", "180");
             popimg.setAttribute("alt", "''");
@@ -774,201 +844,213 @@ var UIcontrol = {
         this.map.fitBounds(this.bounds);
     },
     loadContag: function () {
-        this.updateTop("condiv", "prodiv", "seadiv");
-        Mapdata.getConTagCount(this.proTagStatus);
-        var ul1 = document.createElement("ul");
-        ul1.style.margin = "0";
-        for (var i1 = 0; i1 < Mapdata.ConCou.length; i1++) {
-            var li1 = document.createElement("li");
-            li1.setAttribute("name", "li_con");
-            li1.setAttribute("class", "tag-1");
-            li1.setAttribute("id", "li_con_" + Mapdata.ConCou[i1].tag);
-            li1.setAttribute("onclick", "UIcontrol.tagSelect('con','" + Mapdata.ConCou[i1].tag + "','" +
-                Mapdata.ConCou[i1].text + "');");
-            li1.innerHTML = Mapdata.ConCou[i1].text + "(" + Mapdata.ConCou[i1].count + ")";
-            ul1.appendChild(li1);
-            if (Mapdata.ConCou[i1].child) {
-                var ul2 = document.createElement("ul");
-                ul2.style.margin = "0";
-                for (var i2 = 0; i2 < Mapdata.ConCou[i1].child.length; i2++) {
-                    var li2 = document.createElement("li");
-                    li2.setAttribute("class", "tag-2");
-                    li2.setAttribute("onclick", "UIcontrol.tagSelect('con_open','" + Mapdata.ConCou[i1]
-                        .child[i2].tag + "','" + Mapdata.ConCou[i1].child[i2].text + "');");
-                    li2.innerHTML = "<img name='img_con' id='img_con_" + Mapdata.ConCou[i1].child[i2].tag +
-                        "' src='http://lookcn.org/wp-content/uploads/2017/06/tag2_c1.png' />" + Mapdata
-                        .ConCou[i1].child[i2].text // + "(" + Mapdata.ConCou[i1].child[i2].count + ")";
-                    ul2.appendChild(li2);
-                    if (Mapdata.ConCou[i1].child[i2].child) {
-                        var ul3 = document.createElement("ul");
-                        ul3.style.margin = "0";
-                        ul3.style.display = "none";
-                        ul3.setAttribute("name", "ul_con");
-                        ul3.setAttribute("id", "ul_con_" + Mapdata.ConCou[i1].child[i2].tag);
-                        for (var i3 = 0; i3 < Mapdata.ConCou[i1].child[i2].child.length; i3++) {
-                            var li3 = document.createElement("li");
-                            li3.setAttribute("class", "tag-3");
-                            li3.setAttribute("name", "li_con");
-                            li3.setAttribute("id", "li_con_" + Mapdata.ConCou[i1].child[i2].child[i3].tag);
-                            li3.setAttribute("onclick", "UIcontrol.tagSelect('con','" + Mapdata.ConCou[
-                                    i1].child[i2].child[i3].tag + "','" + Mapdata.ConCou[i1].text +
-                                "-" + Mapdata.ConCou[i1].child[i2].text + "-" + Mapdata.ConCou[i1].child[
-                                    i2].child[i3].text + "');");
-                            li3.innerHTML = Mapdata.ConCou[i1].child[i2].child[i3].text + "(" + Mapdata
-                                .ConCou[i1].child[i2].child[i3].count + ")";
-                            ul3.appendChild(li3);
+        if (document.getElementById("condiv")) {
+            this.updateTop("condiv", "prodiv", "seadiv");
+            Mapdata.getConTagCount(this.proTagStatus);
+            var ul1 = document.createElement("ul");
+            ul1.style.margin = "0";
+            for (var i1 = 0; i1 < Mapdata.ConCou.length; i1++) {
+                var li1 = document.createElement("li");
+                li1.setAttribute("name", "li_con");
+                li1.setAttribute("class", "tag-1");
+                li1.setAttribute("id", "li_con_" + Mapdata.ConCou[i1].tag);
+                li1.setAttribute("onclick", "UIcontrol.tagSelect('con','" + Mapdata.ConCou[i1].tag + "','" +
+                    Mapdata.ConCou[i1].text + "');");
+                li1.innerHTML = Mapdata.ConCou[i1].text + "(" + Mapdata.ConCou[i1].count + ")";
+                ul1.appendChild(li1);
+                if (Mapdata.ConCou[i1].child) {
+                    var ul2 = document.createElement("ul");
+                    ul2.style.margin = "0";
+                    for (var i2 = 0; i2 < Mapdata.ConCou[i1].child.length; i2++) {
+                        var li2 = document.createElement("li");
+                        li2.setAttribute("class", "tag-2");
+                        li2.setAttribute("onclick", "UIcontrol.tagSelect('con_open','" + Mapdata.ConCou[i1]
+                            .child[i2].tag + "','" + Mapdata.ConCou[i1].child[i2].text + "');");
+                        li2.innerHTML = "<img name='img_con' id='img_con_" + Mapdata.ConCou[i1].child[i2].tag +
+                            "' src='http://lookcn.org/wp-content/uploads/2017/06/tag2_c1.png' />" + Mapdata
+                            .ConCou[i1].child[i2].text // + "(" + Mapdata.ConCou[i1].child[i2].count + ")";
+                        ul2.appendChild(li2);
+                        if (Mapdata.ConCou[i1].child[i2].child) {
+                            var ul3 = document.createElement("ul");
+                            ul3.style.margin = "0";
+                            ul3.style.display = "none";
+                            ul3.setAttribute("name", "ul_con");
+                            ul3.setAttribute("id", "ul_con_" + Mapdata.ConCou[i1].child[i2].tag);
+                            for (var i3 = 0; i3 < Mapdata.ConCou[i1].child[i2].child.length; i3++) {
+                                var li3 = document.createElement("li");
+                                li3.setAttribute("class", "tag-3");
+                                li3.setAttribute("name", "li_con");
+                                li3.setAttribute("id", "li_con_" + Mapdata.ConCou[i1].child[i2].child[i3].tag);
+                                li3.setAttribute("onclick", "UIcontrol.tagSelect('con','" + Mapdata.ConCou[
+                                        i1].child[i2].child[i3].tag + "','" + Mapdata.ConCou[i1].text +
+                                    "-" + Mapdata.ConCou[i1].child[i2].text + "-" + Mapdata.ConCou[i1].child[
+                                        i2].child[i3].text + "');");
+                                li3.innerHTML = Mapdata.ConCou[i1].child[i2].child[i3].text + "(" + Mapdata
+                                    .ConCou[i1].child[i2].child[i3].count + ")";
+                                ul3.appendChild(li3);
+                            }
+                            ul2.appendChild(ul3);
                         }
-                        ul2.appendChild(ul3);
                     }
+                    ul1.appendChild(ul2);
                 }
-                ul1.appendChild(ul2);
             }
+            var contentdiv = document.getElementById("contentdiv");
+            contentdiv.innerHTML = ul1.outerHTML;
+            this.updateTags("con", this.conTagStatus);
+            this.updateTags("con_open", this.conTagStatus);
         }
-        var contentdiv = document.getElementById("contentdiv");
-        contentdiv.innerHTML = ul1.outerHTML;
-        this.updateTags("con", this.conTagStatus);
-        this.updateTags("con_open", this.conTagStatus);
     },
     loadProtag: function () {
-        this.updateTop("prodiv", "condiv", "seadiv");
-        Mapdata.getProTagCount(this.conTagStatus);
-        var ul = document.createElement("ul");
-        ul.style.margin = "0";
-        for (var i = 0; i < Mapdata.ProCou.length; i++) {
-            if (Mapdata.ProCou[i].tag === "ALL" || Mapdata.ProCou[i].count > 0) {
-                var li = document.createElement("li");
-                li.setAttribute("class", "tag-1");
-                li.setAttribute("name", "li_pro");
-                li.setAttribute("id", "li_pro_" + Mapdata.ProCou[i].tag);
-                li.setAttribute("onclick", "UIcontrol.tagSelect('pro','" + Mapdata.ProCou[i].tag +
-                    "','" + Mapdata.ProCou[i].text + "');");
-                li.innerHTML = Mapdata.ProCou[i].text + "(" + Mapdata.ProCou[i].count + ")";
-                ul.appendChild(li);
+        if (document.getElementById("prodiv")) {
+            this.updateTop("prodiv", "condiv", "seadiv");
+            Mapdata.getProTagCount(this.conTagStatus);
+            var ul = document.createElement("ul");
+            ul.style.margin = "0";
+            for (var i = 0; i < Mapdata.ProCou.length; i++) {
+                if (Mapdata.ProCou[i].tag === "ALL" || Mapdata.ProCou[i].count > 0) {
+                    var li = document.createElement("li");
+                    li.setAttribute("class", "tag-1");
+                    li.setAttribute("name", "li_pro");
+                    li.setAttribute("id", "li_pro_" + Mapdata.ProCou[i].tag);
+                    li.setAttribute("onclick", "UIcontrol.tagSelect('pro','" + Mapdata.ProCou[i].tag +
+                        "','" + Mapdata.ProCou[i].text + "');");
+                    li.innerHTML = Mapdata.ProCou[i].text + "(" + Mapdata.ProCou[i].count + ")";
+                    ul.appendChild(li);
+                }
             }
+            var contentdiv = document.getElementById("contentdiv");
+            contentdiv.innerHTML = ul.outerHTML;
+            this.updateTags("pro", this.proTagStatus);
         }
-        var contentdiv = document.getElementById("contentdiv");
-        contentdiv.innerHTML = ul.outerHTML;
-        this.updateTags("pro", this.proTagStatus);
     },
     loadSearch: function () {
-        this.updateTop("seadiv", "condiv", "prodiv");
-        var contentdiv = document.getElementById("contentdiv");
-        contentdiv.innerHTML = "";
-        //var width = contentdiv.clientWidth;
-        var height = contentdiv.clientHeight;
-        var titlediv = document.createElement("div");
-        titlediv.style.height = "25px";
-        titlediv.style.lineHeight = "25px";
-        titlediv.style.fontSize = "12px";
-        titlediv.innerHTML = "标题：";
-        var titleinput = document.createElement("input");
-        titleinput.setAttribute("type", "text");
-        titleinput.setAttribute("id", "titlein");
-        titleinput.setAttribute("value", this.searchTitle);
-        titleinput.style.width = "60%";
-        titleinput.style.borderWidth = "1px";
-        titleinput.style.height = "16px";
-        titleinput.style.lineHeight = "16px";
-        titleinput.style.fontSize = "12px";
-        titlediv.appendChild(titleinput);
-        contentdiv.appendChild(titlediv);
-        var authordiv = document.createElement("div");
-        authordiv.style.height = "25px";
-        authordiv.style.lineHeight = "25px";
-        authordiv.style.fontSize = "12px";
-        authordiv.innerHTML = "作者：";
-        var authorinput = document.createElement("input");
-        authorinput.setAttribute("type", "text");
-        authorinput.setAttribute("id", "authorin");
-        authorinput.setAttribute("value", this.searchAuthor);
-        authorinput.style.width = "60%";
-        authorinput.style.borderWidth = "1px";
-        authorinput.style.height = "16px";
-        authorinput.style.lineHeight = "16px";
-        authorinput.style.fontSize = "12px";
-        authordiv.appendChild(authorinput);
-        contentdiv.appendChild(authordiv);
-        var locationdiv = document.createElement("div");
-        locationdiv.style.height = "25px";
-        locationdiv.style.lineHeight = "25px";
-        locationdiv.style.fontSize = "12px";
-        locationdiv.innerHTML = "位置：";
-        var locationinput = document.createElement("input");
-        locationinput.setAttribute("type", "text");
-        locationinput.setAttribute("id", "locationin");
-        locationinput.setAttribute("value", this.searchLocation);
-        locationinput.style.width = "60%";
-        locationinput.style.borderWidth = "1px";
-        locationinput.style.height = "16px";
-        locationinput.style.lineHeight = "16px";
-        locationinput.style.fontSize = "12px";
-        locationdiv.appendChild(locationinput);
-        contentdiv.appendChild(locationdiv);
-        var buttondiv = document.createElement("div");
-        buttondiv.style.height = "30px";
-        buttondiv.style.lineHeight = "30px";
-        buttondiv.style.whiteSpace = "nowrap";
-        var searchbotton1 = document.createElement("input");
-        searchbotton1.setAttribute("type", "button");
-        searchbotton1.setAttribute("value", "查找");
-        searchbotton1.setAttribute("onclick", "UIcontrol.txtSearch(0)");
-        searchbotton1.style.width = "25%";
-        searchbotton1.style.border = "2px solid #a79e8d";
-        searchbotton1.style.borderRadius = "10px";
-        searchbotton1.style.margin = "0";
-        searchbotton1.style.padding = "0";
-        searchbotton1.style.marginRight = "10%";
-        searchbotton1.style.backgroundColor = "#ffffff";
-        searchbotton1.style.color = "#000000";
-        searchbotton1.style.height = "24px";
-        searchbotton1.style.lineHeight = "16px";
-        searchbotton1.style.fontSize = "12px";
-        searchbotton1.style.display = "inline";
-        buttondiv.appendChild(searchbotton1);
-        var searchbotton2 = document.createElement("input");
-        searchbotton2.setAttribute("type", "button");
-        searchbotton2.setAttribute("value", "限定下查找");
-        searchbotton2.setAttribute("onclick", "UIcontrol.txtSearch(1)");
-        searchbotton2.style.width = "45%";
-        searchbotton2.style.border = "2px solid #a79e8d";
-        searchbotton2.style.borderRadius = "10px";
-        searchbotton2.style.margin = "0";
-        searchbotton2.style.padding = "0";
-        searchbotton2.style.backgroundColor = "#ffffff";
-        searchbotton2.style.color = "#000000";
-        searchbotton2.style.height = "24px";
-        searchbotton2.style.lineHeight = "16px";
-        searchbotton2.style.fontSize = "12px";
-        searchbotton2.style.display = "inline";
-        buttondiv.appendChild(searchbotton2);
-        contentdiv.appendChild(buttondiv);
-        var resultul = document.createElement("ul");
-        resultul.style.margin = "0";
-        resultul.style.height = "20px";
-        resultul.setAttribute("id", "searchresultul");
-        contentdiv.appendChild(resultul);
-        var info = document.createElement("div");
-        //info.style.width = "100%";
-        info.style.height = (height - 125) + "px";
-        info.style.overflowY = "auto";
-        info.style.overflowX = "hidden";
-        info.id = "searchinfo";
-        info.innerHTML = "";
-        contentdiv.appendChild(info);
-        if (this.searchTitle !== "" || this.searchAuthor !== "" || this.searchLocation !== "") {
-            this.txtSearch(this.searchType);
+        if (document.getElementById("seadiv")) {
+            this.updateTop("seadiv", "condiv", "prodiv");
+            var contentdiv = document.getElementById("contentdiv");
+            contentdiv.innerHTML = "";
+            //var width = contentdiv.clientWidth;
+            var height = contentdiv.clientHeight;
+            var titlediv = document.createElement("div");
+            titlediv.style.height = "25px";
+            titlediv.style.lineHeight = "25px";
+            titlediv.style.fontSize = "12px";
+            titlediv.innerHTML = "标题：";
+            var titleinput = document.createElement("input");
+            titleinput.setAttribute("type", "text");
+            titleinput.setAttribute("id", "titlein");
+            titleinput.setAttribute("value", this.searchTitle);
+            titleinput.style.width = "60%";
+            titleinput.style.borderWidth = "1px";
+            titleinput.style.height = "16px";
+            titleinput.style.lineHeight = "16px";
+            titleinput.style.fontSize = "12px";
+            titlediv.appendChild(titleinput);
+            contentdiv.appendChild(titlediv);
+            var authordiv = document.createElement("div");
+            authordiv.style.height = "25px";
+            authordiv.style.lineHeight = "25px";
+            authordiv.style.fontSize = "12px";
+            authordiv.innerHTML = self.search_author_text;
+            var authorinput = document.createElement("input");
+            authorinput.setAttribute("type", "text");
+            authorinput.setAttribute("id", "authorin");
+            authorinput.setAttribute("value", this.searchAuthor);
+            authorinput.style.width = "60%";
+            authorinput.style.borderWidth = "1px";
+            authorinput.style.height = "16px";
+            authorinput.style.lineHeight = "16px";
+            authorinput.style.fontSize = "12px";
+            authordiv.appendChild(authorinput);
+            contentdiv.appendChild(authordiv);
+            var locationdiv = document.createElement("div");
+            locationdiv.style.height = "25px";
+            locationdiv.style.lineHeight = "25px";
+            locationdiv.style.fontSize = "12px";
+            locationdiv.innerHTML = "位置：";
+            var locationinput = document.createElement("input");
+            locationinput.setAttribute("type", "text");
+            locationinput.setAttribute("id", "locationin");
+            locationinput.setAttribute("value", this.searchLocation);
+            locationinput.style.width = "60%";
+            locationinput.style.borderWidth = "1px";
+            locationinput.style.height = "16px";
+            locationinput.style.lineHeight = "16px";
+            locationinput.style.fontSize = "12px";
+            locationdiv.appendChild(locationinput);
+            contentdiv.appendChild(locationdiv);
+            var buttondiv = document.createElement("div");
+            buttondiv.style.height = "30px";
+            buttondiv.style.lineHeight = "30px";
+            buttondiv.style.whiteSpace = "nowrap";
+            var searchbotton1 = document.createElement("input");
+            searchbotton1.setAttribute("type", "button");
+            searchbotton1.setAttribute("value", "查找");
+            searchbotton1.setAttribute("onclick", "UIcontrol.txtSearch(0)");
+            searchbotton1.style.width = "25%";
+            searchbotton1.style.border = "2px solid #a79e8d";
+            searchbotton1.style.borderRadius = "10px";
+            searchbotton1.style.margin = "0";
+            searchbotton1.style.padding = "0";
+            searchbotton1.style.marginRight = "10%";
+            searchbotton1.style.backgroundColor = "#ffffff";
+            searchbotton1.style.color = "#000000";
+            searchbotton1.style.height = "24px";
+            searchbotton1.style.lineHeight = "16px";
+            searchbotton1.style.fontSize = "12px";
+            searchbotton1.style.display = "inline";
+            buttondiv.appendChild(searchbotton1);
+            var searchbotton2 = document.createElement("input");
+            searchbotton2.setAttribute("type", "button");
+            searchbotton2.setAttribute("value", "限定下查找");
+            searchbotton2.setAttribute("onclick", "UIcontrol.txtSearch(1)");
+            searchbotton2.style.width = "45%";
+            searchbotton2.style.border = "2px solid #a79e8d";
+            searchbotton2.style.borderRadius = "10px";
+            searchbotton2.style.margin = "0";
+            searchbotton2.style.padding = "0";
+            searchbotton2.style.backgroundColor = "#ffffff";
+            searchbotton2.style.color = "#000000";
+            searchbotton2.style.height = "24px";
+            searchbotton2.style.lineHeight = "16px";
+            searchbotton2.style.fontSize = "12px";
+            searchbotton2.style.display = "inline";
+            buttondiv.appendChild(searchbotton2);
+            contentdiv.appendChild(buttondiv);
+            var resultul = document.createElement("ul");
+            resultul.style.margin = "0";
+            resultul.style.height = "20px";
+            resultul.setAttribute("id", "searchresultul");
+            contentdiv.appendChild(resultul);
+            var info = document.createElement("div");
+            //info.style.width = "100%";
+            info.style.height = (height - 125) + "px";
+            info.style.overflowY = "auto";
+            info.style.overflowX = "hidden";
+            info.id = "searchinfo";
+            info.innerHTML = "";
+            contentdiv.appendChild(info);
+            if (this.searchTitle !== "" || this.searchAuthor !== "" || this.searchLocation !== "") {
+                this.txtSearch(this.searchType);
+            }
         }
     },
     updateTop: function (idt, idf1, idf2) {
         var iddiv = document.getElementById(idt);
-        iddiv.style.backgroundColor = "rgba(167,158,141,0.8)";
-        iddiv.style.color = "#ffffff";
+        if (iddiv) {
+            iddiv.style.backgroundColor = "rgba(167,158,141,0.8)";
+            iddiv.style.color = "#ffffff";
+        };
         iddiv = document.getElementById(idf1);
-        iddiv.style.backgroundColor = "#ffffff";
-        iddiv.style.color = "#000000";
+        if (iddiv) {
+            iddiv.style.backgroundColor = "#ffffff";
+            iddiv.style.color = "#000000";
+        };
         iddiv = document.getElementById(idf2);
-        iddiv.style.backgroundColor = "#ffffff";
-        iddiv.style.color = "#000000";
+        if (iddiv) {
+            iddiv.style.backgroundColor = "#ffffff";
+            iddiv.style.color = "#000000";
+        }
     },
     updateTags: function (type, tag) {
         if (type === "con_open") {
@@ -1128,9 +1210,4 @@ var UIcontrol = {
         }
         return txt.replace(" ", "");
     }
-};
-UIcontrol.initMap();
-window.onresize = function () {
-    UIcontrol.reSizeDivs();
-    setTimeout("UIcontrol.reDrawMap()", 501);
 };
