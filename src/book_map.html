@@ -1,0 +1,2464 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <style type="text/css">
+        .tag-1 {
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: left;
+            margin-top: 0px;
+            padding-left: 6px;
+        }
+
+        .tag-2 {
+            height: 30px;
+            line-height: 30px;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .tag-2 img {
+            margin-left: 10px;
+            margin-right: 10px;
+            vertical-align: text-bottom;
+        }
+
+        .tag-3 {
+            height: 30px;
+            line-height: 30px;
+            font-size: 12px;
+            text-align: left;
+            padding-left: 35px;
+        }
+
+        .tag-focus {
+            background-color: rgba(167, 158, 141, 0.8);
+            color: rgb(255, 255, 255);
+        }
+    </style>
+    <div id="back" style="position: relative; width: 100%; overflow: hidden; border: 0; margin: 0; padding: 0;">
+        <div id="map" style="position: absolute; top: 0; left: 0; bottom: 0; min-height: 100px; min-width: 200px; margin: 0; padding: 0; transition: width 0.5s;">&nbsp;</div>
+        <div id="right-bar" style="position: absolute; top: 0; right: 0; bottom: 0; min-width: 200px; min-height: 100px; background-color: rgba(238, 238, 238, 1); overflow: auto; margin-right: 0; z-index: 800; cursor: default; transition: margin-right 0.5s;">
+            <table style="width: 100%; height: 100%; margin: 0; border: 0; padding: 0;" cellspacing="0" cellpadding="0">
+                <tbody>
+                    <tr>
+                        <td id="toptd" style="width: 100%; height: 50px; margin: 0; border: 0; border-bottom: 1px solid #cccccc; padding: 0px;" align="center"
+                            valign="middle">
+                            <table style="width: 100%; max-width: 300px; font-size: 13px; margin: 0; margin-top: 11px; border: 0; padding: 0;" cellspacing="0"
+                                cellpadding="0">
+                                <tbody>
+                                    <tr style="width: 100%;">
+                                        <td style="width: 25%; margin: 0; border: 0; padding: 0; display: none;" align="center" valign="middle">
+                                            <div id="condiv" onclick="UIcontrol.loadProtag();" style="height: 26px; line-height: 22px; text-align: center; width: 60%; min-width: 35px; border: 2px solid #a79e8d; border-radius: 12px; background-color: #ffffff;">标签</div>
+                                        </td>
+                                        <td style="width: 25%; margin: 0; border: 0; padding: 0;" align="center" valign="middle">
+                                            <div id="prodiv" onclick="UIcontrol.loadProtag();" style="height: 26px; line-height: 22px; text-align: center; width: 60%; min-width: 35px; border: 2px solid #a79e8d; border-radius: 12px; background-color: #ffffff;">地域</div>
+                                        </td>
+                                        <td style="width: 25%; margin: 0; border: 0; padding: 0;" align="center" valign="middle">
+                                            <div id="seadiv" onclick="UIcontrol.loadSearch();" style="height: 26px; line-height: 22px; text-align: center; width: 60%; min-width: 35px; border: 2px solid #a79e8d; border-radius: 12px; background-color: #ffffff;">查找</div>
+                                        </td>
+                                        <td style="max-width: 50px; margin: 0; border: 0; padding: 0;">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" align="center" style="width:100%;margin: 0;border: 0;padding: 0px;">
+                            <div id="contentdiv" style="width:100%; overflow-y: auto;overflow-x: hidden;"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="bottomtd" style="width: 100%; height: 50px; line-height: 20px; font-size: 12px; color: #a79e8d; margin: 0; border: 0; border-top: 1px solid #cccccc; padding: 2px; padding-left: 10px;"
+                            align="left" valign="middle">&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="full-page-slider" onclick="UIcontrol.fullPageSlide()" style="position: absolute; top: 90px; left: 0; margin-left: 10px; width: 34px; height: 34px; border-radius: 6px; border: 2px solid #cccccc; background-color: #ffffff; z-index: 900; cursor: pointer;">
+            <img src="http://lookcn.org/wp-content/uploads/2017/03/full.png" alt="适应窗口" width="30" height="30">
+        </div>
+        <div id="right-bar-slider" onclick="UIcontrol.rightBarSlide()" style="position: absolute; top: 0; right: 0; margin-top: 10px; margin-right: 15px; width: 34px; height: 34px; border-radius: 6px; border: 2px solid #cccccc; background-color: #ffffff; z-index: 900; cursor: pointer;">
+            <img src="http://lookcn.org/wp-content/uploads/2017/03/close.png" alt="关闭索引栏" width="30" height="30">
+        </div>
+    </div>
+    <link rel="stylesheet" property="" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <link rel="stylesheet" property="" href="http://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" property="" href="http://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="http://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+    <script type="text/javascript">
+        var Mapdata = {
+            addressPoints: [{
+                    lat: 26.253663778,
+                    lng: 105.9461868345,
+                    alt: "图像人类学视野中的贵州安顺屯堡",
+                    title: "图像人类学视野中的贵州安顺屯堡",
+                    author: "@山小菌",
+                    type: 1,
+                    protag: "GZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1676549/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-1-2.jpg"
+                },
+                {
+                    lat: 26.3314235405,
+                    lng: 106.690631694,
+                    alt: "青岩镇的建筑文化",
+                    title: "青岩镇的建筑文化",
+                    author: "@山小菌",
+                    type: 1,
+                    protag: "GZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3350704/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-2.jpg"
+                },
+                {
+                    lat: 28.9266264424,
+                    lng: 116.2395412278,
+                    alt: "鄱湖经典名镇",
+                    title: "鄱湖经典名镇",
+                    author: "@山小菌",
+                    type: 1,
+                    protag: "JX",
+                    contag: "",
+                    url: "https://book.douban.com/subject/21241386/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-3.jpg"
+                },
+                {
+                    lat: 40.2959291683,
+                    lng: 116.2236391042,
+                    alt: "风雪定陵",
+                    title: "风雪定陵",
+                    author: "@羊牧东岭",
+                    type: 1,
+                    protag: "BJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1023188/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-4.jpg"
+                },
+                {
+                    lat: 30.9771660608,
+                    lng: 120.4938025281,
+                    alt: "江村经济",
+                    title: "江村经济",
+                    author: "@何处",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/2274697/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-5.jpg"
+                },
+                {
+                    lat: 37.1893415732,
+                    lng: 112.17557151,
+                    alt: "山西文化资源地图",
+                    title: "山西文化资源地图",
+                    author: "@僧盐",
+                    type: 1,
+                    protag: "SX",
+                    contag: "",
+                    url: "https://book.douban.com/subject/4869785/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-6.jpg"
+                },
+                {
+                    lat: 31.2304324029,
+                    lng: 121.4737919321,
+                    alt: "上海春秋",
+                    title: "上海春秋",
+                    author: "@何处",
+                    type: 1,
+                    protag: "SH",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1768251/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-7.jpg"
+                },
+                {
+                    lat: 39.883271733,
+                    lng: 116.3756703502,
+                    alt: "城记",
+                    title: "城记",
+                    author: "@Atlas",
+                    type: 1,
+                    protag: "BJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1070711/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-8.jpg"
+                },
+                {
+                    lat: 28.3409290544,
+                    lng: 120.7342794486,
+                    alt: "楠溪江中游古村落 - 乡土中国丛书",
+                    title: "楠溪江中游古村落 - 乡土中国丛书",
+                    author: "@山小菌/@小车",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1046948/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-10.jpg"
+                },
+                {
+                    lat: 29.8607645736,
+                    lng: 118.4135860273,
+                    alt: "徽州- 乡土中国丛书",
+                    title: "徽州- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "AH",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1002039/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-11.jpg"
+                },
+                {
+                    lat: 27.556884,
+                    lng: 119.717649,
+                    alt: "泰顺- 乡土中国丛书",
+                    title: "泰顺- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1056760/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-12.jpg"
+                },
+                {
+                    lat: 37.1893415732,
+                    lng: 112.17557151,
+                    alt: "晋中大院- 乡土中国丛书",
+                    title: "晋中大院- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "SX",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1006041/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-13.jpg"
+                },
+                {
+                    lat: 29.9949264914,
+                    lng: 120.5786649877,
+                    alt: "水乡绍兴- 乡土中国丛书",
+                    title: "水乡绍兴- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1031647/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-14.jpg"
+                },
+                {
+                    lat: 30.2744294185,
+                    lng: 109.4872673842,
+                    alt: "武陵人家- 乡土中国丛书",
+                    title: "武陵人家- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "HB",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1071341/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-15.jpg"
+                },
+                {
+                    lat: 28.7679619824,
+                    lng: 106.0800923787,
+                    alt: "福宝场- 乡土中国丛书",
+                    title: "福宝场- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "SC",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1081233/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-16.jpg"
+                },
+                {
+                    lat: 25.0126572298,
+                    lng: 98.4578049523,
+                    alt: "和顺- 乡土中国丛书",
+                    title: "和顺- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "YN",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1023208/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-17.jpg"
+                },
+                {
+                    lat: 26.6763212454,
+                    lng: 109.2005117911,
+                    alt: "锦屏- 乡土中国丛书",
+                    title: "锦屏- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "GZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1010991/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-18.jpg"
+                },
+                {
+                    lat: 25.8543674321,
+                    lng: 108.1618244502,
+                    alt: "摆贝- 乡土中国丛书",
+                    title: "摆贝- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "GZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1082619/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-19.jpg"
+                },
+                {
+                    lat: 28.9359234988,
+                    lng: 118.8741817065,
+                    alt: "衢州- 乡土中国丛书",
+                    title: "衢州- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1001562/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-20.jpg"
+                },
+                {
+                    lat: 25.6394113768,
+                    lng: 116.6387390256,
+                    alt: "培田- 乡土中国丛书",
+                    title: "培田- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "FJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1442278/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-21.jpg"
+                },
+                {
+                    lat: 24.4176213078,
+                    lng: 118.2268095379,
+                    alt: "金门- 乡土中国丛书",
+                    title: "金门- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "FJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/2297686/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-22.jpg"
+                },
+                {
+                    lat: 22.3763756531,
+                    lng: 112.6984955518,
+                    alt: "岭南五邑- 乡土中国丛书",
+                    title: "岭南五邑- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "GD",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1442489/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-23.jpg"
+                },
+                {
+                    lat: 25.8329587467,
+                    lng: 116.3602339651,
+                    alt: "闽西客家- 乡土中国丛书",
+                    title: "闽西客家- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "FJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1030530/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-24.jpg"
+                },
+                {
+                    lat: 24.5019114112,
+                    lng: 117.7150546737,
+                    alt: "蓝田- 乡土中国丛书",
+                    title: "蓝田- 乡土中国丛书",
+                    author: "",
+                    type: 1,
+                    protag: "FJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1082620/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-25.jpg"
+                },
+                {
+                    lat: 25.047725,
+                    lng: 121.51123,
+                    alt: "台湾的古城",
+                    title: "台湾的古城",
+                    author: "@山小菌",
+                    type: 1,
+                    protag: "TW",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3982329/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-26.jpg"
+                },
+                {
+                    lat: 22.2816309665,
+                    lng: 114.1720676422,
+                    alt: "香港方物志",
+                    title: "香港方物志",
+                    author: "@何处",
+                    type: 1,
+                    protag: "HK",
+                    contag: "",
+                    url: "https://book.douban.com/subject/6776357/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-27.jpg"
+                },
+                {
+                    lat: 24.723962,
+                    lng: 116.732092,
+                    alt: "东方古城堡",
+                    title: "东方古城堡",
+                    author: "@山小菌",
+                    type: 1,
+                    protag: "FJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3146361/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-28.jpg"
+                },
+                {
+                    lat: 32.0204915,
+                    lng: 118.7890403,
+                    alt: "南京人",
+                    title: "南京人",
+                    author: "@金晟Jason",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/2357193/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-29.jpg"
+                },
+                {
+                    lat: 32.054746,
+                    lng: 118.764743,
+                    alt: "随园食单",
+                    title: "随园食单",
+                    author: "@金晟Jason",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1006884/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-30.jpg"
+                },
+                {
+                    lat: 39.9244306228,
+                    lng: 116.4175503249,
+                    alt: "唐鲁孙作品",
+                    title: "唐鲁孙作品",
+                    author: "@僧盐",
+                    type: 1,
+                    protag: "BJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3062449/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-31.jpg"
+                },
+                {
+                    lat: 31.003948,
+                    lng: 121.248263,
+                    alt: "与古为新",
+                    title: "与古为新",
+                    author: "@Atlas",
+                    type: 1,
+                    protag: "SH",
+                    contag: "",
+                    url: "https://book.douban.com/subject/4759147/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-32.jpg"
+                },
+                {
+                    lat: 24.914112,
+                    lng: 118.585359,
+                    alt: "泉州古城踏勘",
+                    title: "泉州古城踏勘",
+                    author: "@袁无涯",
+                    type: 1,
+                    protag: "FJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3030183/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-33.jpg"
+                },
+                {
+                    lat: 31.2983274306,
+                    lng: 120.5831901464,
+                    alt: "姑苏食话",
+                    title: "姑苏食话",
+                    author: "@百鬼夜行",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1572548/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-34.jpg"
+                },
+                {
+                    lat: 32.0204915,
+                    lng: 118.7890403,
+                    alt: "南京地名源",
+                    title: "南京地名源",
+                    author: "@金晟Jason",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/25865549/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-35.jpg"
+                },
+                {
+                    lat: 34.5579965913,
+                    lng: 112.4729523127,
+                    alt: "佛光无尽",
+                    title: "佛光无尽",
+                    author: "@袁无涯",
+                    type: 1,
+                    protag: "HA",
+                    contag: "",
+                    url: "https://book.douban.com/subject/25986157/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-36.jpg"
+                },
+                {
+                    lat: 23.129065973,
+                    lng: 113.2643500268,
+                    alt: "寻城记·广州",
+                    title: "寻城记·广州",
+                    author: "@hpdum201311",
+                    type: 1,
+                    protag: "GD",
+                    contag: "",
+                    url: "https://book.douban.com/subject/11603579/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-37.jpg"
+                },
+                {
+                    lat: 32.0355534043,
+                    lng: 118.7433162163,
+                    alt: "南京大屠杀",
+                    title: "南京大屠杀",
+                    author: "@金晟Jason",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/20440053/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-39.jpg"
+                },
+                {
+                    lat: 39.9046716842,
+                    lng: 116.4071591969,
+                    alt: "一点儿北京",
+                    title: "一点儿北京",
+                    author: "@Atlas",
+                    type: 1,
+                    protag: "BJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/25751679/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-40.jpg"
+                },
+                {
+                    lat: 39.9046716842,
+                    lng: 116.4071591969,
+                    alt: "北京伽蓝记",
+                    title: "北京伽蓝记",
+                    author: "@袁无涯",
+                    type: 1,
+                    protag: "BJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/26360311/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-41.jpg"
+                },
+                {
+                    lat: 24.8796770861,
+                    lng: 102.8332234099,
+                    alt: "一颗印",
+                    title: "一颗印",
+                    author: "@山小菌",
+                    type: 1,
+                    protag: "YN",
+                    contag: "",
+                    url: "https://book.douban.com/subject/6011724/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-42.jpg.jpg"
+                },
+                {
+                    lat: 31.2983274306,
+                    lng: 120.5831901464,
+                    alt: "吴郡岁华纪丽",
+                    title: "吴郡岁华纪丽",
+                    author: "@山小菌",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1834469/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-44.jpg"
+                },
+                {
+                    lat: 31.2983274306,
+                    lng: 120.5831901464,
+                    alt: "苏州古典园林",
+                    title: "苏州古典园林",
+                    author: "@小车",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1578501/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-46.jpg"
+                },
+                {
+                    lat: 28.290412793,
+                    lng: 118.4822894691,
+                    alt: "廿八都古镇-乡土记忆丛书",
+                    title: "廿八都古镇-乡土记忆丛书",
+                    author: "@山小菌",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3717298/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-48.jpg"
+                },
+                {
+                    lat: 28.355562,
+                    lng: 118.506495,
+                    alt: "仙霞古道-乡土记忆丛书",
+                    title: "仙霞古道-乡土记忆丛书",
+                    author: "",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-49.jpg"
+                },
+                {
+                    lat: 28.676428,
+                    lng: 118.609773,
+                    alt: "清湖码头-乡土记忆丛书",
+                    title: "清湖码头-乡土记忆丛书",
+                    author: "",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3671434/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-50.jpg"
+                },
+                {
+                    lat: 28.46682,
+                    lng: 118.521078,
+                    alt: "峡口古镇-乡土记忆丛书",
+                    title: "峡口古镇-乡土记忆丛书",
+                    author: "",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3717296/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-51.jpg"
+                },
+                {
+                    lat: 27.6161528,
+                    lng: 119.9311962,
+                    alt: "观前码头-乡土记忆丛书",
+                    title: "观前码头-乡土记忆丛书",
+                    author: "",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/4000713/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-52.jpg"
+                },
+                {
+                    lat: 31.2303950509,
+                    lng: 121.4736999111,
+                    alt: "上海 1842-2010，一座伟大城市的肖像",
+                    title: "上海 1842-2010，一座伟大城市的肖像",
+                    author: "@小车",
+                    type: 1,
+                    protag: "SH",
+                    contag: "",
+                    url: "https://book.douban.com/subject/4703007/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-57.jpg"
+                },
+                {
+                    lat: 38.4864711966,
+                    lng: 106.232471105,
+                    alt: "中国伊斯兰敎派与门宦制度史略",
+                    title: "中国伊斯兰敎派与门宦制度史略",
+                    author: "@小车",
+                    type: 1,
+                    protag: "NX",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1547449/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-58.jpg"
+                },
+                {
+                    lat: 38.7012304033,
+                    lng: 113.1214010735,
+                    alt: "山西古代彩塑",
+                    title: "山西古代彩塑",
+                    author: "@何处",
+                    type: 1,
+                    protag: "SX",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3132139/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-59.jpg"
+                },
+                {
+                    lat: 30.6604564201,
+                    lng: 104.0337185723,
+                    alt: "四川汉代石阙",
+                    title: "四川汉代石阙",
+                    author: "@小车",
+                    type: 1,
+                    protag: "SC",
+                    contag: "",
+                    url: "https://book.douban.com/subject/2121786/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-60.jpg"
+                },
+                {
+                    lat: 40.0379123878,
+                    lng: 94.80302992,
+                    alt: "沿着古代中亚的道路",
+                    title: "沿着古代中亚的道路",
+                    author: "@小车",
+                    type: 1,
+                    protag: "GS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3174527/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-61.jpg"
+                },
+                {
+                    lat: 39.9492604601,
+                    lng: 116.3790061857,
+                    alt: "北京的关厢乡镇和老字号",
+                    title: "北京的关厢乡镇和老字号",
+                    author: "@锡兵",
+                    type: 1,
+                    protag: "BJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1145747/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-66.jpg"
+                },
+                {
+                    lat: 22.2963405272,
+                    lng: 114.1723815683,
+                    alt: "香港重庆大厦",
+                    title: "香港重庆大厦",
+                    author: "@锡兵",
+                    type: 1,
+                    protag: "HK",
+                    contag: "",
+                    url: "https://book.douban.com/subject/26591565/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-67.jpg"
+                },
+                {
+                    lat: 22.3320866436,
+                    lng: 114.1902949441,
+                    alt: "黑暗之城",
+                    title: "黑暗之城",
+                    author: "@锡兵",
+                    type: 1,
+                    protag: "HK",
+                    contag: "",
+                    url: "https://book.douban.com/subject/26552069/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-68.jpg"
+                },
+                {
+                    lat: 31.462664,
+                    lng: 79.672338,
+                    alt: "古格王国建筑遗址",
+                    title: "古格王国建筑遗址",
+                    author: "@小小",
+                    type: 1,
+                    protag: "XZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/7006664/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-74.jpg"
+                },
+                {
+                    lat: 40.041476,
+                    lng: 94.809133,
+                    alt: "丝路岁月",
+                    title: "丝路岁月",
+                    author: "@小车",
+                    type: 1,
+                    protag: "",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1844087/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-77.jpg"
+                },
+                {
+                    lat: 27.556884,
+                    lng: 119.717649,
+                    alt: "泰顺行知书",
+                    title: "泰顺行知书",
+                    author: "@小车",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1883800/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-79.jpg"
+                },
+                {
+                    lat: 31.2983274306,
+                    lng: 120.5831901464,
+                    alt: "金粉人间",
+                    title: "金粉人间",
+                    author: "@小车",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/2018019/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-80.jpg"
+                },
+                {
+                    lat: 31.2983274306,
+                    lng: 120.5831901464,
+                    alt: "岩中花树",
+                    title: "岩中花树",
+                    author: "@小车",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/2123589/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-81.jpg"
+                },
+                {
+                    lat: 31.2983274306,
+                    lng: 120.5831901464,
+                    alt: "苏州游踪",
+                    title: "苏州游踪",
+                    author: "@小车",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1940059/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-82.jpg"
+                },
+                {
+                    lat: 29.647535,
+                    lng: 91.117525,
+                    alt: "雪域求法记",
+                    title: "雪域求法记",
+                    author: "@小车",
+                    type: 1,
+                    protag: "XZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3306209/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-83.jpg"
+                },
+                {
+                    lat: 29.647535,
+                    lng: 91.117525,
+                    alt: "西藏是我家",
+                    title: "西藏是我家",
+                    author: "@小车",
+                    type: 1,
+                    protag: "XZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1879894/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-84.jpg"
+                },
+                {
+                    lat: 29.647535,
+                    lng: 91.117525,
+                    alt: "西藏秘行",
+                    title: "西藏秘行",
+                    author: "@小车",
+                    type: 1,
+                    protag: "XZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1077529/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-85.jpg"
+                },
+                {
+                    lat: 31.462664,
+                    lng: 79.672338,
+                    alt: "荒原古堡・ 西藏古格王国故城探察记",
+                    title: "荒原古堡・ 西藏古格王国故城探察记",
+                    author: "@小车",
+                    type: 1,
+                    protag: "XZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1067292/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-86.jpg"
+                },
+                {
+                    lat: 31.462664,
+                    lng: 79.672338,
+                    alt: "古格王国",
+                    title: "古格王国",
+                    author: "@小车",
+                    type: 1,
+                    protag: "XZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1068341/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-87.jpg"
+                },
+                {
+                    lat: 29.647535,
+                    lng: 91.117525,
+                    alt: "喇嘛王国的覆灭",
+                    title: "喇嘛王国的覆灭",
+                    author: "@小车",
+                    type: 1,
+                    protag: "XZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1289849/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-88.jpg"
+                },
+                {
+                    lat: 29.647535,
+                    lng: 91.117525,
+                    alt: "国民政府女密使赴藏纪实",
+                    title: "国民政府女密使赴藏纪实",
+                    author: "@小车",
+                    type: 1,
+                    protag: "XZ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3778377/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-89.jpg"
+                },
+                {
+                    lat: 29.986271,
+                    lng: 121.526759,
+                    alt: "东来第一山——保国寺",
+                    title: "东来第一山——保国寺",
+                    author: "@小车",
+                    type: 1,
+                    protag: "ZJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/2306664/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-90.jpg"
+                },
+                {
+                    lat: 27.7244646,
+                    lng: 100.7887231,
+                    alt: "无父无夫的国度",
+                    title: "无父无夫的国度",
+                    author: "@小车",
+                    type: 1,
+                    protag: "SC",
+                    contag: "",
+                    url: "https://book.douban.com/subject/4201396/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-92.jpg"
+                },
+                {
+                    lat: 26.312444,
+                    lng: 99.850366,
+                    alt: "在沙溪阅读时间",
+                    title: "在沙溪阅读时间",
+                    author: "@小车",
+                    type: 1,
+                    protag: "YN",
+                    contag: "",
+                    url: "https://book.douban.com/subject/5365160/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-93.jpg"
+                },
+                {
+                    lat: 39.9046716842,
+                    lng: 116.4071591969,
+                    alt: "北京古建筑地图丛书",
+                    title: "北京古建筑地图丛书",
+                    author: "",
+                    type: 1,
+                    protag: "BJ",
+                    contag: "",
+                    url: "https://book.douban.com/series/1044",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-96.jpg"
+                },
+                {
+                    lat: 31.32125964,
+                    lng: 120.6288238,
+                    alt: "江南园林志",
+                    title: "江南园林志",
+                    author: "@谢利军",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1114862/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-99.jpg"
+                },
+                {
+                    lat: 31.31552588,
+                    lng: 120.5920652,
+                    alt: "梓翁说园",
+                    title: "梓翁说园",
+                    author: "@谢利军",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/5938993/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-100.jpg"
+                },
+                {
+                    lat: 40.04253076,
+                    lng: 94.80920547,
+                    alt: "敦煌鉴赏精选50窟",
+                    title: "敦煌鉴赏精选50窟",
+                    author: "@百鬼夜行",
+                    type: 1,
+                    protag: "GS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3031079/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-101.jpg"
+                },
+                {
+                    lat: 40.041476,
+                    lng: 94.809133,
+                    alt: "丝路岁月",
+                    title: "丝路岁月",
+                    author: "@小车",
+                    type: 1,
+                    protag: "",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1844087/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-77.jpg"
+                },
+                {
+                    lat: 43.826589353,
+                    lng: 87.616893994,
+                    alt: "亚洲腹地探险八年",
+                    title: "亚洲腹地探险八年",
+                    author: "@小车",
+                    type: 1,
+                    protag: "XJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1419710/",
+                    content: "http://lookcn.org/wp-content/gallery/0423-book/0423-book-65.jpg"
+                },
+                {
+                    lat: 31.31552588,
+                    lng: 120.5920652,
+                    alt: "老苏州",
+                    title: "老苏州",
+                    author: "@僧盐",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1071678/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-102.jpg"
+                },
+                {
+                    lat: 24.8796770861,
+                    lng: 102.8332234099,
+                    alt: "老昆明",
+                    title: "老昆明",
+                    author: "@僧盐",
+                    type: 1,
+                    protag: "YN",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1697721/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-103.jpg"
+                },
+                {
+                    lat: 25.047725,
+                    lng: 121.51123,
+                    alt: "台湾古建筑图解事典",
+                    title: "台湾古建筑图解事典",
+                    author: "@僧盐",
+                    type: 1,
+                    protag: "TW",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1342633/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-104.jpg"
+                },
+                {
+                    lat: 34.797049,
+                    lng: 114.341447,
+                    alt: "东京梦华录",
+                    title: "东京梦华录",
+                    author: "@僧盐",
+                    type: 1,
+                    protag: "HA",
+                    contag: "",
+                    url: "https://book.douban.com/subject/4903692/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-105.jpg"
+                },
+                {
+                    lat: 39.9154256573,
+                    lng: 116.3970840738,
+                    alt: "大紫禁城",
+                    title: "大紫禁城",
+                    author: "",
+                    type: 1,
+                    protag: "BJ",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3565628/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-107.jpg"
+                },
+                {
+                    lat: 31.2079159211,
+                    lng: 121.4298314728,
+                    alt: "上海邬达克建筑地图",
+                    title: "上海邬达克建筑地图",
+                    author: "",
+                    type: 1,
+                    protag: "SH",
+                    contag: "",
+                    url: "https://book.douban.com/subject/20495120/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-108.jpg"
+                },
+                {
+                    lat: 28.18040974,
+                    lng: 112.9410947222,
+                    alt: "长沙沙水水无沙",
+                    title: "长沙沙水水无沙",
+                    author: "",
+                    type: 1,
+                    protag: "HN",
+                    contag: "",
+                    url: "https://book.douban.com/subject/2196782/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-109.jpg"
+                },
+                {
+                    lat: 43.9059887556,
+                    lng: 125.3489706288,
+                    alt: "伪满洲国首都规划",
+                    title: "伪满洲国首都规划",
+                    author: "",
+                    type: 1,
+                    protag: "JL",
+                    contag: "",
+                    url: "https://book.douban.com/subject/6789166/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-110.jpg"
+                },
+                {
+                    lat: 32.4090880054,
+                    lng: 119.4200881452,
+                    alt: "说扬州",
+                    title: "说扬州",
+                    author: "",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/2261730/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-111.jpg"
+                },
+                {
+                    lat: 32.4090880054,
+                    lng: 119.4200881452,
+                    alt: "扬州园林",
+                    title: "扬州园林",
+                    author: "",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/2122320/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-112.jpg"
+                },
+                {
+                    lat: 32.0204915,
+                    lng: 118.7890403,
+                    alt: "家住六朝烟水间",
+                    title: "家住六朝烟水间",
+                    author: "",
+                    type: 1,
+                    protag: "JS",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1487152/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-113.jpg"
+                },
+                {
+                    lat: 30.5702135619,
+                    lng: 114.0490776531,
+                    alt: "汉口的沧桑往事",
+                    title: "汉口的沧桑往事",
+                    author: "",
+                    type: 1,
+                    protag: "HB",
+                    contag: "",
+                    url: "https://book.douban.com/subject/26005474/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-114.jpg"
+                },
+                {
+                    lat: 23.129065973,
+                    lng: 113.2643500268,
+                    alt: "广州往事",
+                    title: "广州往事",
+                    author: "",
+                    type: 1,
+                    protag: "GD",
+                    contag: "",
+                    url: "https://book.douban.com/subject/5281114/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-115.jpg"
+                },
+                {
+                    lat: 29.9247504322,
+                    lng: 117.9383290895,
+                    alt: "中国古镇游 江南 徽州",
+                    title: "中国古镇游 江南 徽州",
+                    author: "@百鬼夜行",
+                    type: 1,
+                    protag: "AH",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1163752/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-117.jpg"
+                },
+                {
+                    lat: 29.8922548096,
+                    lng: 117.9730634104,
+                    alt: "中国明清民居博物馆 西递",
+                    title: "中国明清民居博物馆 西递",
+                    author: "@百鬼夜行",
+                    type: 1,
+                    protag: "AH",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3278807/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-118.jpg"
+                },
+                {
+                    lat: 30.3447731687,
+                    lng: 117.9915925755,
+                    alt: "器物里的旧光阴",
+                    title: "器物里的旧光阴",
+                    author: "@百鬼夜行",
+                    type: 1,
+                    protag: "AH",
+                    contag: "",
+                    url: "https://book.douban.com/subject/26386781/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-119.jpg"
+                },
+                {
+                    lat: 42.2861920248,
+                    lng: 123.8424057743,
+                    alt: "巨流河",
+                    title: "巨流河",
+                    author: "@子文东",
+                    type: 1,
+                    protag: "LN",
+                    contag: "",
+                    url: "https://book.douban.com/subject/4842446/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-120.jpg"
+                },
+                {
+                    lat: 45.8889917306,
+                    lng: 126.587959224,
+                    alt: "呼兰河传",
+                    title: "呼兰河传",
+                    author: "@子文东",
+                    type: 1,
+                    protag: "HL",
+                    contag: "",
+                    url: "https://book.douban.com/subject/26372408/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-121.jpg"
+                },
+                {
+                    lat: 53.48156,
+                    lng: 122.35956,
+                    alt: "额尔古纳河右岸",
+                    title: "额尔古纳河右岸",
+                    author: "@子文东",
+                    type: 1,
+                    protag: "HL",
+                    contag: "",
+                    url: "https://book.douban.com/subject/25866532/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-122.jpg"
+                },
+                {
+                    lat: 45.7820251587,
+                    lng: 126.6403989108,
+                    alt: "白雪乌鸦",
+                    title: "白雪乌鸦",
+                    author: "@子文东",
+                    type: 1,
+                    protag: "HL",
+                    contag: "",
+                    url: "https://book.douban.com/subject/5275073/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-123.jpg"
+                },
+                {
+                    lat: 25.0266821797,
+                    lng: 98.4815747981,
+                    alt: "腾冲之围",
+                    title: "腾冲之围",
+                    author: "@子文东",
+                    type: 1,
+                    protag: "YN",
+                    contag: "",
+                    url: "https://book.douban.com/subject/25885817/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-124.jpg"
+                },
+                {
+                    lat: 31.2398227725,
+                    lng: 121.4700776021,
+                    alt: "上海1937",
+                    title: "上海1937",
+                    author: "@子文东",
+                    type: 1,
+                    protag: "SH",
+                    contag: "",
+                    url: "https://book.douban.com/subject/26278718/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-125.jpg"
+                },
+                {
+                    lat: 41.7984168598,
+                    lng: 123.4557004666,
+                    alt: "洪业",
+                    title: "洪业",
+                    author: "",
+                    type: 1,
+                    protag: "LN",
+                    contag: "",
+                    url: "https://book.douban.com/subject/1132689/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-127.jpg"
+                },
+                {
+                    lat: 43.880040454,
+                    lng: 125.3077621361,
+                    alt: "伪满时期长春城市规划与建筑研究",
+                    title: "伪满时期长春城市规划与建筑研究",
+                    author: "",
+                    type: 1,
+                    protag: "JL",
+                    contag: "",
+                    url: "https://book.douban.com/subject/3509413/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-128.jpg"
+                },
+                {
+                    lat: 43.8636241176,
+                    lng: 125.292365677,
+                    alt: "炮声中的电影",
+                    title: "炮声中的电影",
+                    author: "",
+                    type: 1,
+                    protag: "JL",
+                    contag: "",
+                    url: "https://book.douban.com/subject/26312905/",
+                    content: "http://lookcn.org/wp-content/gallery/0429-book/0429-book-129.jpg"
+                },
+            ],
+            indexs: null,
+            ProCou: [{
+                    tag: "ALL",
+                    text: "全部",
+                    count: 0
+                },
+                {
+                    tag: "BJ",
+                    text: "北京",
+                    count: 0
+                },
+                {
+                    tag: "SH",
+                    text: "上海",
+                    count: 0
+                },
+                {
+                    tag: "TJ",
+                    text: "天津",
+                    count: 0
+                },
+                {
+                    tag: "CQ",
+                    text: "重庆",
+                    count: 0
+                },
+                {
+                    tag: "HE",
+                    text: "河北",
+                    count: 0
+                },
+                {
+                    tag: "SX",
+                    text: "山西",
+                    count: 0
+                },
+                {
+                    tag: "NM",
+                    text: "内蒙古",
+                    count: 0
+                },
+                {
+                    tag: "LN",
+                    text: "辽宁",
+                    count: 0
+                },
+                {
+                    tag: "JL",
+                    text: "吉林",
+                    count: 0
+                },
+                {
+                    tag: "HL",
+                    text: "黑龙江",
+                    count: 0
+                },
+                {
+                    tag: "JS",
+                    text: "江苏",
+                    count: 0
+                },
+                {
+                    tag: "ZJ",
+                    text: "浙江",
+                    count: 0
+                },
+                {
+                    tag: "AH",
+                    text: "安徽",
+                    count: 0
+                },
+                {
+                    tag: "FJ",
+                    text: "福建",
+                    count: 0
+                },
+                {
+                    tag: "JX",
+                    text: "江西",
+                    count: 0
+                },
+                {
+                    tag: "SD",
+                    text: "山东",
+                    count: 0
+                },
+                {
+                    tag: "HA",
+                    text: "河南",
+                    count: 0
+                },
+                {
+                    tag: "HB",
+                    text: "湖北",
+                    count: 0
+                },
+                {
+                    tag: "HN",
+                    text: "湖南",
+                    count: 0
+                },
+                {
+                    tag: "GD",
+                    text: "广东",
+                    count: 0
+                },
+                {
+                    tag: "GX",
+                    text: "广西",
+                    count: 0
+                },
+                {
+                    tag: "HI",
+                    text: "海南",
+                    count: 0
+                },
+                {
+                    tag: "SC",
+                    text: "四川",
+                    count: 0
+                },
+                {
+                    tag: "GZ",
+                    text: "贵州",
+                    count: 0
+                },
+                {
+                    tag: "YN",
+                    text: "云南",
+                    count: 0
+                },
+                {
+                    tag: "XZ",
+                    text: "西藏",
+                    count: 0
+                },
+                {
+                    tag: "SN",
+                    text: "陕西",
+                    count: 0
+                },
+                {
+                    tag: "GS",
+                    text: "甘肃",
+                    count: 0
+                },
+                {
+                    tag: "QH",
+                    text: "青海",
+                    count: 0
+                },
+                {
+                    tag: "NX",
+                    text: "宁夏",
+                    count: 0
+                },
+                {
+                    tag: "XJ",
+                    text: "新疆",
+                    count: 0
+                },
+                {
+                    tag: "TW",
+                    text: "台湾",
+                    count: 0
+                },
+                {
+                    tag: "HK",
+                    text: "香港",
+                    count: 0
+                },
+                {
+                    tag: "MO",
+                    text: "澳门",
+                    count: 0
+                }
+            ],
+            ConCou: [ //一级：ABCDEFGH,二级：I-Z
+                {
+                    tag: "ALL",
+                    text: "全部",
+                    count: 0
+                },
+                {
+                    tag: "A",
+                    text: "建筑",
+                    count: 0,
+                    child: [{
+                            tag: "AI",
+                            text: "用途",
+                            child: [{
+                                    tag: "AI1",
+                                    text: "宗教、祭祀",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AI2",
+                                    text: "住宅、公用",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AI3",
+                                    text: "宫殿",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AI4",
+                                    text: "陵墓",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AI5",
+                                    text: "园林",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AI6",
+                                    text: "其它",
+                                    count: 0
+                                }
+                            ]
+                        },
+                        {
+                            tag: "AJ",
+                            text: "形制",
+                            child: [{
+                                    tag: "AJ1",
+                                    text: "房屋",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AJ2",
+                                    text: "城郭及钟鼓楼",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AJ3",
+                                    text: "牌坊、亭",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AJ4",
+                                    text: "桥梁",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AJ5",
+                                    text: "塔",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AJ6",
+                                    text: "碑",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AJ7",
+                                    text: "其它",
+                                    count: 0
+                                }
+                            ]
+                        },
+                        {
+                            tag: "AK",
+                            text: "材料",
+                            child: [{
+                                    tag: "AK1",
+                                    text: "石材",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AK2",
+                                    text: "木材",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AK3",
+                                    text: "砖",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AK4",
+                                    text: "金属",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AK5",
+                                    text: "夯土",
+                                    count: 0
+                                },
+                                {
+                                    tag: "AK6",
+                                    text: "其它",
+                                    count: 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    tag: "B",
+                    text: "手艺",
+                    count: 0,
+                    child: [{
+                            tag: "BI",
+                            text: "成品",
+                            child: [{
+                                    tag: "BI1",
+                                    text: "日常用具",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BI2",
+                                    text: "衣着服饰",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BI3",
+                                    text: "家居摆饰",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BI4",
+                                    text: "文娱玩具",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BI5",
+                                    text: "祭庆用品",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BI6",
+                                    text: "武器工具",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BI7",
+                                    text: "其它",
+                                    count: 0
+                                }
+                            ]
+                        },
+                        {
+                            tag: "BJ",
+                            text: "材质",
+                            child: [{
+                                    tag: "BJ1",
+                                    text: "木竹草",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BJ2",
+                                    text: "砖石玉",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BJ3",
+                                    text: "土陶瓷",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BJ4",
+                                    text: "金属类",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BJ5",
+                                    text: "纺织品",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BJ6",
+                                    text: "牙骨角",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BJ7",
+                                    text: "叶皮纸",
+                                    count: 0
+                                },
+                                {
+                                    tag: "BJ8",
+                                    text: "其它",
+                                    count: 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            loaddata: function () {
+                this.allIndexs();
+                this.getProTagCount();
+                //  this.getConTagCount();
+            },
+            allIndexs: function () {
+                this.indexs = new Array();
+                var len = this.addressPoints.length;
+                for (var i = 0; i < len; i++) {
+                    this.indexs[i] = i;
+                }
+            },
+            tagFilter: function (protag, contag) {
+                this.allIndexs();
+                //                        alert("过滤条件：" + protag + "+" + contag + "初始" + this.indexs.length);
+                if (protag !== "ALL") {
+                    var newIndexs = new Array();
+                    var newi = 0;
+                    for (var i = 0; i < this.indexs.length; i++) {
+                        if (protag === this.addressPoints[this.indexs[i]].protag) {
+                            newIndexs[newi] = this.indexs[i];
+                            newi = newi + 1;
+                        }
+                    }
+                    this.indexs = newIndexs;
+                }
+                //                        alert("省份" + this.indexs.length);
+                if (contag !== "ALL") {
+                    var newIndexs = new Array();
+                    var newi = 0;
+                    for (var i = 0; i < this.indexs.length; i++) {
+                        if (this.addressPoints[this.indexs[i]].contag.indexOf(contag) > -1) {
+                            newIndexs[newi] = this.indexs[i];
+                            newi = newi + 1;
+                        }
+                    }
+                    this.indexs = newIndexs;
+                }
+                //                        alert("内容" + this.indexs.length);
+            },
+            searchFilter: function (type, txt) {
+                if (type === "title") {
+                    var newIndexs = new Array();
+                    var newi = 0;
+                    for (var i = 0; i < this.indexs.length; i++) {
+                        if (this.addressPoints[this.indexs[i]].title.indexOf(txt) > -1) {
+                            newIndexs[newi] = this.indexs[i];
+                            newi = newi + 1;
+                        }
+                    }
+                    this.indexs = newIndexs;
+                }
+                if (type === "author") {
+                    var newIndexs = new Array();
+                    var newi = 0;
+                    for (var i = 0; i < this.indexs.length; i++) {
+                        if (this.addressPoints[this.indexs[i]].author.indexOf(txt) > -1) {
+                            newIndexs[newi] = this.indexs[i];
+                            newi = newi + 1;
+                        }
+                    }
+                    this.indexs = newIndexs;
+                }
+                if (type === "location") {
+                    //                                var newIndexs = new Array();
+                    //                                var newi = 0;
+                    //                                for (var i = 0; i < this.indexs.length; i++) {
+                    //                                    if (this.addressPoints[this.indexs[i]].title.indexOf(txt) > -1) {
+                    //                                        newIndexs[newi] = this.indexs[i];
+                    //                                        newi = newi + 1;
+                    //                                    }
+                    //                                }
+                    //                                this.indexs = newIndexs;
+                }
+            },
+            getCenterBounds: function () {
+                var r = {
+                    latmin: 16,
+                    latmax: 50,
+                    lngmin: 100,
+                    lngmax: 120
+                };
+                if (this.indexs === null) {
+                    this.allIndexs();
+                }
+                var len = this.indexs.length;
+                if (len > 0) {
+                    var lati = this.addressPoints[this.indexs[0]].lat;
+                    var lngi = this.addressPoints[this.indexs[0]].lng;
+                    r.latmax = lati;
+                    r.latmin = lati;
+                    r.lngmax = lngi;
+                    r.lngmin = lngi;
+                    for (var i = 1; i < len; i++) {
+                        var lati = this.addressPoints[this.indexs[i]].lat;
+                        r.latmax = Math.max(r.latmax, lati);
+                        r.latmin = Math.min(r.latmin, lati);
+                        var lngi = this.addressPoints[this.indexs[i]].lng;
+                        r.lngmax = Math.max(r.lngmax, lngi);
+                        r.lngmin = Math.min(r.lngmin, lngi);
+                    }
+                }
+                return r;
+            },
+            getProTagCount: function (contag) {
+                for (var ii = 0; ii < this.ProCou.length; ii++) {
+                    this.ProCou[ii].count = 0;
+                }
+                this.tagFilter("ALL", contag);
+                for (var i = 0; i < this.indexs.length; i++) {
+                    this.ProCou[0].count = this.ProCou[0].count + 1;
+                    var protagi = this.addressPoints[this.indexs[i]].protag;
+                    for (var ii = 1; ii < this.ProCou.length; ii++) {
+                        if (this.ProCou[ii].tag === protagi) {
+                            this.ProCou[ii].count = this.ProCou[ii].count + 1;
+                            break;
+                        }
+                    }
+                }
+            },
+            getConTagCount: function (protag) {
+                this.ConCou[0].count = 0;
+                for (var i1 = 1; i1 < this.ConCou.length; i1++) {
+                    this.ConCou[i1].count = 0;
+                    for (var i2 = 0; i2 < this.ConCou[i1].child.length; i2++) {
+                        //                                    this.ConCou[i1].child[i2].count = 0;
+                        for (var i3 = 0; i3 < this.ConCou[i1].child[i2].child.length; i3++) {
+                            this.ConCou[i1].child[i2].child[i3].count = 0;
+                        }
+                    }
+                }
+                this.tagFilter(protag, "ALL");
+                for (var i = 0; i < this.indexs.length; i++) {
+                    this.ConCou[0].count = this.ConCou[0].count + 1;
+                    var contagi = this.addressPoints[this.indexs[i]].contag;
+                    if (contagi !== "") {
+                        for (var i1 = 1; i1 < this.ConCou.length; i1++) {
+                            if (contagi.indexOf(this.ConCou[i1].tag) > -1) {
+                                this.ConCou[i1].count = this.ConCou[i1].count + 1;
+                            }
+                            for (var i2 = 0; i2 < this.ConCou[i1].child.length; i2++) {
+                                //                                            if (contagi.indexOf(this.ConCou[i1].child[i2].tag) > -1) {
+                                //                                                this.ConCou[i1].child[i2].count = this.ConCou[i1].child[i2].count + 1;
+                                //                                            }
+                                for (var i3 = 0; i3 < this.ConCou[i1].child[i2].child.length; i3++) {
+                                    if (contagi.indexOf(this.ConCou[i1].child[i2].child[i3].tag) > -1) {
+                                        this.ConCou[i1].child[i2].child[i3].count = this.ConCou[i1].child[i2].child[
+                                            i3].count + 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <script type="text/javascript">
+        var UIcontrol = {
+            map: null,
+            bounds: null,
+            markers: null,
+            Icons: {
+                markerIcon1: L.icon({
+                    iconUrl: 'http://lookcn.org/wp-content/uploads/2017/03/marker-icon-type1.png',
+                    iconSize: [30, 40],
+                    iconAnchor: [15, 34],
+                    popupAnchor: [0, -16]
+                }),
+                markerIcon2: L.icon({
+                    iconUrl: 'http://lookcn.org/wp-content/uploads/2017/03/marker-icon-type2.png',
+                    iconSize: [30, 40],
+                    iconAnchor: [15, 34],
+                    popupAnchor: [0, -16]
+                }),
+                markerIcon3: L.icon({
+                    iconUrl: 'http://lookcn.org/wp-content/uploads/2017/03/marker-icon-type3.png',
+                    iconSize: [30, 40],
+                    iconAnchor: [15, 34],
+                    popupAnchor: [0, -16]
+                })
+            },
+            proTagStatus: "ALL",
+            proTagText: "全部",
+            conTagStatus: "ALL",
+            conTagText: "全部",
+            searchTitle: "",
+            searchAuthor: "",
+            searchLocation: "",
+            searchType: 1,
+            itemStatus: "ALL",
+            fullPageStatus: "NORM",
+            rightBarStatus: "SHOW",
+            fullPageStatusInit: (767 > window.innerWidth) ? "FULL" : "NORM",
+            rightBarStatusInit: (767 > window.innerWidth) ? "HIDDEN" : "SHOW",
+            reSizeDivs: function () {
+                var divback = document.getElementById("back"),
+                    divmap = document.getElementById("map"),
+                    divrightBar = document.getElementById("right-bar"),
+                    divcontent = document.getElementById("contentdiv"),
+                    divsearchinfo = document.getElementById("searchinfo");
+                var parw = divback.clientWidth;
+                var clh = Math.round(parw * 0.618);
+                if (clh > 610) {
+                    clh = 610;
+                }
+                var clw = Math.round(parw * 0.2);
+                if (this.fullPageStatus !== "NORM") {
+                    clh = document.documentElement.clientHeight; //document.body.clientHeight;
+                    parw = document.documentElement.clientWidth; //document.body.clientWidth;
+                    clw = Math.round(parw * 0.2);
+                }
+                if (clw < 200) {
+                    clw = 200;
+                }
+                if (clh < 100) {
+                    clh = 100;
+                }
+                divback.style.height = clh + "px";
+                divmap.style.height = (clh - 2) + "px";
+                divrightBar.style.height = (clh - 2) + "px";
+                divcontent.style.height = (clh - 108) + "px";
+                divrightBar.style.width = (clw - 2) + "px";
+                //divcontent.style.width = (clw - 2) + "px";
+                if (divsearchinfo) {
+                    //divsearchinfo.style.width = (clw - 2) + "px";
+                    divsearchinfo.style.height = (clh - 108 - 125) + "px";
+                }
+                if (this.rightBarStatus === "SHOW") {
+                    divmap.style.width = (parw - clw) + "px";
+                    divrightBar.style.marginRight = "0px";
+                } else {
+                    divmap.style.width = (parw - 2) + "px";
+                    divrightBar.style.marginRight = "-" + (clw - 2) + "px";
+                }
+            },
+            initMap: function () {
+                var preFullPageStatus = this.fullPageStatus
+                var preRightBarStatus = this.rightBarStatus
+                if (767 > window.innerWidth && preFullPageStatus === "NORM") {
+                    this.fullPageSlide();
+                }
+                if (767 > window.innerWidth && preRightBarStatus === "SHOW") {
+                    this.rightBarSlide();
+                }
+                this.reSizeDivs();
+                var tiles = L.tileLayer(
+                    'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
+                        //'http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineStreetColor/MapServer/tile/{z}/{y}/{x}', {
+                        //<a href="http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineStreetColor/MapServer">ArcGIS</a>
+                        minZoom: 3,
+                        maxZoom: 16,
+                        attribution: '<a href="http://ditu.amap.com/">高德地图</a> &copy;'
+                    });
+                this.map = L.map('map', {
+                    center: L.latLng(36.69, 107.34),
+                    zoom: 4,
+                    layers: [tiles]
+                });
+                L.control.scale().addTo(this.map);
+                //                    this.map.invalidateSize(true);
+                this.proTagStatus = "ALL";
+                // this.conTagStatus = "ALL";
+                //                    Mapdata.loaddata();
+                this.updateMap();
+                this.loadContag(this.proTagStatus);
+                //this.loaProtag();
+                this.updateBottom();
+            },
+            updateMap: function () {
+                var CenBou = Mapdata.getCenterBounds();
+                this.bounds = L.latLngBounds(L.latLng(CenBou.latmin, CenBou.lngmin), L.latLng(CenBou.latmax,
+                    CenBou.lngmax));
+                this.map.fitBounds(this.bounds);
+                if (this.markers !== null) {
+                    this.map.removeLayer(this.markers);
+                }
+                if (Mapdata.indexs.length > 0) {
+                    this.markers = L.markerClusterGroup();
+                    //                    alert("更新结果"+Mapdata.indexs.length);
+                    var popdiv = document.createElement("div");
+                    popdiv.style.position = "relative";
+                    popdiv.style.borderTop = "7px solid #ffffff";
+                    popdiv.style.cursor = "pointer";
+                    popdiv.style.maxHeight = "150px";
+                    popdiv.style.overflowY = "hidden";
+                    var popimg = document.createElement("img");
+                    popimg.setAttribute("width", "180");
+                    popimg.setAttribute("alt", "''");
+                    popimg.setAttribute("src", "''");
+                    var poptitle = document.createElement("div");
+                    poptitle.style.position = "absolute";
+                    poptitle.style.width = "180px";
+                    poptitle.style.height = "50px";
+                    poptitle.style.left = "0";
+                    poptitle.style.bottom = "0";
+                    poptitle.style.right = "0";
+                    poptitle.style.textAlign = "center";
+                    poptitle.style.lineHeight = "22px";
+                    poptitle.style.backgroundColor = "rgba(256,256,256,0.6)";
+                    poptitle.style.color = "#aa00aa";
+                    for (var i = 0; i < Mapdata.indexs.length; i++) {
+                        var a = Mapdata.addressPoints[Mapdata.indexs[i]];
+                        if (a.type === 1) {
+                            var marker = L.marker(new L.LatLng(a.lat, a.lng), {
+                                title: a.alt,
+                                icon: this.Icons.markerIcon1
+                            });
+                        } else if (a.type === 2) {
+                            var marker = L.marker(new L.LatLng(a.lat, a.lng), {
+                                title: a.alt,
+                                icon: this.Icons.markerIcon2
+                            });
+                        } else {
+                            var marker = L.marker(new L.LatLng(a.lat, a.lng), {
+                                title: a.alt,
+                                icon: this.Icons.markerIcon3
+                            });
+                        }
+                        popimg.alt = a.content;
+                        poptitle.innerHTML = a.title + "&nbsp;&nbsp;-by: " + a.author;
+                        popdiv.setAttribute("onclick", "window.open('" + a.url + "','_blank');");
+                        popdiv.innerHTML = popimg.outerHTML + poptitle.outerHTML;
+                        marker.bindPopup(popdiv.outerHTML, {
+                            minWidth: 180,
+                            maxWidth: 180
+                        }).on('popupopen', function (popup) {
+                            var popupopen_img = popup.popup._contentNode.getElementsByTagName('img')[0];
+                            popupopen_img.setAttribute("src", popupopen_img.alt);
+                        });
+                        this.markers.addLayer(marker);
+                    }
+                    this.map.addLayer(this.markers);
+                }
+            },
+            fullPageSlide: function () {
+                var mainele = document.getElementById("main"),
+                    divfullPageSlider = document.getElementById("full-page-slider"),
+                    html = document.getElementsByTagName("html");
+                if (this.fullPageStatus === "NORM") {
+                    this.fullPageStatus = "FULL";
+                    divfullPageSlider.innerHTML =
+                        '<img alt="适应屏幕" src="http://lookcn.org/wp-content/uploads/2017/03/renormal.png" width="30" height="30">';
+                    mainele.style.position = "fixed";
+                    mainele.style.top = "0";
+                    mainele.style.left = "0";
+                    mainele.style.bottom = "0";
+                    mainele.style.right = "0";
+                    mainele.style.zIndex = "2333";
+                    html[0].style.overflowY = "hidden";
+                } else {
+                    this.fullPageStatus = "NORM";
+                    divfullPageSlider.innerHTML =
+                        '<img alt="正常页面" src="http://lookcn.org/wp-content/uploads/2017/03/full.png" width="30" height="30">';
+                    mainele.removeAttribute("style");
+                    html[0].style.overflowY = "auto";
+                }
+                this.reSizeDivs();
+                setTimeout("UIcontrol.reDrawMap()", 501);
+            },
+            rightBarSlide: function () {
+                var divback = document.getElementById("back"),
+                    divmap = document.getElementById("map"),
+                    divrightBar = document.getElementById("right-bar"),
+                    divrightBarSlider = document.getElementById("right-bar-slider");
+                var parw = divback.clientWidth;
+                var clw = Math.round(parw * 0.2);
+                if (clw < 200) {
+                    clw = 200;
+                }
+                if (this.rightBarStatus === "SHOW") {
+                    this.rightBarStatus = "HIDDEN";
+                    divrightBarSlider.innerHTML =
+                        '<img alt="展开索引栏" src="http://lookcn.org/wp-content/uploads/2017/03/open.png" width="30" height="30">';
+                    divmap.style.width = (parw - 2) + "px";
+                    divrightBar.style.marginRight = "-" + (clw - 2) + "px";
+                } else {
+                    this.rightBarStatus = "SHOW";
+                    divrightBarSlider.innerHTML =
+                        '<img alt="关闭索引栏" src="http://lookcn.org/wp-content/uploads/2017/03/close.png" width="30" height="30">';
+                    divmap.style.width = (parw - clw) + "px";
+                    divrightBar.style.marginRight = "0px";
+                }
+                setTimeout("UIcontrol.reDrawMap()", 501);
+            },
+            reDrawMap: function () {
+                this.map.invalidateSize(true);
+                this.map.fitBounds(this.bounds);
+            },
+            loadContag: function () {
+                this.updateTop("prodiv", "condiv", "seadiv");
+                Mapdata.getProTagCount(this.conTagStatus);
+                var ul = document.createElement("ul");
+                ul.style.margin = "0";
+                for (var i = 0; i < Mapdata.ProCou.length; i++) {
+                    if (Mapdata.ProCou[i].tag === "ALL" || Mapdata.ProCou[i].count > 0) {
+                        var li = document.createElement("li");
+                        li.setAttribute("class", "tag-1");
+                        li.setAttribute("name", "li_pro");
+                        li.setAttribute("id", "li_pro_" + Mapdata.ProCou[i].tag);
+                        li.setAttribute("onclick", "UIcontrol.tagSelect('pro','" + Mapdata.ProCou[i].tag +
+                            "','" + Mapdata.ProCou[i].text + "');");
+                        li.innerHTML = Mapdata.ProCou[i].text + "(" + Mapdata.ProCou[i].count + ")";
+                        ul.appendChild(li);
+                    }
+                }
+                var contentdiv = document.getElementById("contentdiv");
+                contentdiv.innerHTML = ul.outerHTML;
+                this.updateTags("pro", this.proTagStatus);
+            },
+            loadProtag: function () {
+                this.updateTop("prodiv", "condiv", "seadiv");
+                Mapdata.getProTagCount(this.conTagStatus);
+                var ul = document.createElement("ul");
+                ul.style.margin = "0";
+                for (var i = 0; i < Mapdata.ProCou.length; i++) {
+                    if (Mapdata.ProCou[i].tag === "ALL" || Mapdata.ProCou[i].count > 0) {
+                        var li = document.createElement("li");
+                        li.setAttribute("class", "tag-1");
+                        li.setAttribute("name", "li_pro");
+                        li.setAttribute("id", "li_pro_" + Mapdata.ProCou[i].tag);
+                        li.setAttribute("onclick", "UIcontrol.tagSelect('pro','" + Mapdata.ProCou[i].tag +
+                            "','" + Mapdata.ProCou[i].text + "');");
+                        li.innerHTML = Mapdata.ProCou[i].text + "(" + Mapdata.ProCou[i].count + ")";
+                        ul.appendChild(li);
+                    }
+                }
+                var contentdiv = document.getElementById("contentdiv");
+                contentdiv.innerHTML = ul.outerHTML;
+                this.updateTags("pro", this.proTagStatus);
+            },
+            loadSearch: function () {
+                this.updateTop("seadiv", "condiv", "prodiv");
+                var contentdiv = document.getElementById("contentdiv");
+                contentdiv.innerHTML = "";
+                //var width = contentdiv.clientWidth;
+                var height = contentdiv.clientHeight;
+                var titlediv = document.createElement("div");
+                titlediv.style.height = "25px";
+                titlediv.style.lineHeight = "25px";
+                titlediv.style.fontSize = "12px";
+                titlediv.innerHTML = "标题：";
+                var titleinput = document.createElement("input");
+                titleinput.setAttribute("type", "text");
+                titleinput.setAttribute("id", "titlein");
+                titleinput.setAttribute("value", this.searchTitle);
+                titleinput.style.width = "60%";
+                titleinput.style.borderWidth = "1px";
+                titleinput.style.height = "16px";
+                titleinput.style.lineHeight = "16px";
+                titleinput.style.fontSize = "12px";
+                titlediv.appendChild(titleinput);
+                contentdiv.appendChild(titlediv);
+                var authordiv = document.createElement("div");
+                authordiv.style.height = "25px";
+                authordiv.style.lineHeight = "25px";
+                authordiv.style.fontSize = "12px";
+                authordiv.innerHTML = "推荐者：";
+                var authorinput = document.createElement("input");
+                authorinput.setAttribute("type", "text");
+                authorinput.setAttribute("id", "authorin");
+                authorinput.setAttribute("value", this.searchAuthor);
+                authorinput.style.width = "60%";
+                authorinput.style.borderWidth = "1px";
+                authorinput.style.height = "16px";
+                authorinput.style.lineHeight = "16px";
+                authorinput.style.fontSize = "12px";
+                authordiv.appendChild(authorinput);
+                contentdiv.appendChild(authordiv);
+                var locationdiv = document.createElement("div");
+                locationdiv.style.height = "25px";
+                locationdiv.style.lineHeight = "25px";
+                locationdiv.style.fontSize = "12px";
+                locationdiv.innerHTML = "位置：";
+                var locationinput = document.createElement("input");
+                locationinput.setAttribute("type", "text");
+                locationinput.setAttribute("id", "locationin");
+                locationinput.setAttribute("value", this.searchLocation);
+                locationinput.style.width = "60%";
+                locationinput.style.borderWidth = "1px";
+                locationinput.style.height = "16px";
+                locationinput.style.lineHeight = "16px";
+                locationinput.style.fontSize = "12px";
+                locationdiv.appendChild(locationinput);
+                contentdiv.appendChild(locationdiv);
+                var buttondiv = document.createElement("div");
+                buttondiv.style.height = "30px";
+                buttondiv.style.lineHeight = "30px";
+                buttondiv.style.whiteSpace = "nowrap";
+                var searchbotton1 = document.createElement("input");
+                searchbotton1.setAttribute("type", "button");
+                searchbotton1.setAttribute("value", "查找");
+                searchbotton1.setAttribute("onclick", "UIcontrol.txtSearch(0)");
+                searchbotton1.style.width = "25%";
+                searchbotton1.style.border = "2px solid #a79e8d";
+                searchbotton1.style.borderRadius = "10px";
+                searchbotton1.style.margin = "0";
+                searchbotton1.style.padding = "0";
+                searchbotton1.style.marginRight = "10%";
+                searchbotton1.style.backgroundColor = "#ffffff";
+                searchbotton1.style.color = "#000000";
+                searchbotton1.style.height = "24px";
+                searchbotton1.style.lineHeight = "16px";
+                searchbotton1.style.fontSize = "12px";
+                searchbotton1.style.display = "inline";
+                buttondiv.appendChild(searchbotton1);
+                var searchbotton2 = document.createElement("input");
+                searchbotton2.setAttribute("type", "button");
+                searchbotton2.setAttribute("value", "限定下查找");
+                searchbotton2.setAttribute("onclick", "UIcontrol.txtSearch(1)");
+                searchbotton2.style.width = "45%";
+                searchbotton2.style.border = "2px solid #a79e8d";
+                searchbotton2.style.borderRadius = "10px";
+                searchbotton2.style.margin = "0";
+                searchbotton2.style.padding = "0";
+                searchbotton2.style.backgroundColor = "#ffffff";
+                searchbotton2.style.color = "#000000";
+                searchbotton2.style.height = "24px";
+                searchbotton2.style.lineHeight = "16px";
+                searchbotton2.style.fontSize = "12px";
+                searchbotton2.style.display = "inline";
+                buttondiv.appendChild(searchbotton2);
+                contentdiv.appendChild(buttondiv);
+                var resultul = document.createElement("ul");
+                resultul.style.margin = "0";
+                resultul.style.height = "20px";
+                resultul.setAttribute("id", "searchresultul");
+                contentdiv.appendChild(resultul);
+                var info = document.createElement("div");
+                //info.style.width = "100%";
+                info.style.height = (height - 125) + "px";
+                info.style.overflowY = "auto";
+                info.style.overflowX = "hidden";
+                info.id = "searchinfo";
+                info.innerHTML = "";
+                contentdiv.appendChild(info);
+                if (this.searchTitle !== "" || this.searchAuthor !== "" || this.searchLocation !== "") {
+                    this.txtSearch(this.searchType);
+                }
+            },
+            updateTop: function (idt, idf1, idf2) {
+                var iddiv = document.getElementById(idt);
+                iddiv.style.backgroundColor = "rgba(167,158,141,0.8)";
+                iddiv.style.color = "#ffffff";
+                iddiv = document.getElementById(idf1);
+                iddiv.style.backgroundColor = "#ffffff";
+                iddiv.style.color = "#000000";
+                iddiv = document.getElementById(idf2);
+                iddiv.style.backgroundColor = "#ffffff";
+                iddiv.style.color = "#000000";
+            },
+            updateTags: function (type, tag) {
+                if (type === "con_open") {
+                    var uls = document.getElementsByName("ul_con");
+                    var imgs = document.getElementsByName("img_con");
+                    for (var i = 0; i < uls.length; i++) {
+                        if (("ul_con_" + tag).indexOf(uls[i].id) > -1) {
+                            if (uls[i].style.display === "block") {
+                                uls[i].style.display = "none";
+                                imgs[i].src = "http://lookcn.org/wp-content/uploads/2017/06/tag2_c1.png";
+                            } else {
+                                uls[i].style.display = "block";
+                                imgs[i].src = "http://lookcn.org/wp-content/uploads/2017/06/tag2_o1.png";
+                            }
+                        } else {
+                            uls[i].style.display = "none";
+                            imgs[i].src = "http://lookcn.org/wp-content/uploads/2017/06/tag2_c1.png";
+                        }
+                    }
+                } else {
+                    var lis = document.getElementsByName("li_" + type);
+                    for (var i = 0; i < lis.length; i++) {
+                        if (("li_" + type + "_" + tag) === lis[i].id) {
+                            lis[i].classList.add("tag-focus");
+                        } else {
+                            lis[i].classList.remove("tag-focus");
+                        }
+                    }
+                }
+            },
+            updateSearch: function () {
+                var resultul = document.getElementById("searchresultul");
+                var li = document.createElement("li");
+                li.style.height = "20px";
+                li.style.lineHeight = "20px";
+                li.style.fontSize = "12px";
+                li.style.fontWeight = "bold";
+                li.style.textAlign = "left";
+                li.style.paddingLeft = "10px";
+                li.style.borderBottom = "1px solid #cccccc";
+                li.style.backgroundColor = "#ffffff";
+                li.style.color = "#000000";
+                li.setAttribute("name", "li_item");
+                li.setAttribute("id", "li_item_ALL");
+                li.setAttribute("onclick", "UIcontrol.tagSelect('item','ALL','全部结果');");
+                if (this.searchType) {
+                    li.innerHTML = "限定条件下";
+                } else {
+                    li.innerHTML = "";
+                }
+                li.innerHTML = li.innerHTML + "查找结果：(" + Mapdata.indexs.length + ")";
+                resultul.innerHTML = li.outerHTML;
+                var ul = document.createElement("ul");
+                ul.style.margin = "0";
+                for (var i = 0; i < Mapdata.indexs.length; i++) {
+                    var li = document.createElement("li");
+                    li.style.height = "16px";
+                    //li.style.width = "100%";
+                    li.style.lineHeight = "16px";
+                    li.style.fontSize = "12px";
+                    li.style.textAlign = "left";
+                    //li.style.whiteSpace = "nowrap";
+                    li.style.overflow = "hidden";
+                    //li.style.textOverflow = "ellipsis";
+                    li.style.paddingLeft = "10px";
+                    li.style.borderBottom = "1px solid #cccccc";
+                    li.style.backgroundColor = "#ffffff";
+                    li.style.color = "#000000";
+                    li.setAttribute("name", "li_item");
+                    li.setAttribute("id", "li_item_" + i);
+                    li.setAttribute("onclick", "UIcontrol.tagSelect('item'," + i + ",'" + Mapdata.addressPoints[
+                        Mapdata.indexs[i]].title + "');");
+                    li.innerHTML = "[" + Mapdata.addressPoints[Mapdata.indexs[i]].author + "]" + Mapdata.addressPoints[
+                        Mapdata.indexs[i]].title;
+                    li.setAttribute("title", "[" + Mapdata.addressPoints[Mapdata.indexs[i]].author + "]" +
+                        Mapdata.addressPoints[Mapdata.indexs[i]].title);
+                    ul.appendChild(li);
+                }
+                var info = document.getElementById("searchinfo");
+                info.innerHTML = ul.outerHTML;
+            },
+            updateBottom: function () {
+                var bottomtd = document.getElementById("bottomtd");
+                bottomtd.innerHTML = "";
+                var islimit = false;
+                if (this.conTagStatus !== "ALL") {
+                    bottomtd.innerHTML = bottomtd.innerHTML + '限定 "' + this.conTagText + '"';
+                    islimit = true;
+                }
+                if (this.proTagStatus !== "ALL") {
+                    if (islimit) {
+                        bottomtd.innerHTML = bottomtd.innerHTML + ' & ';
+                    } else {
+                        bottomtd.innerHTML = bottomtd.innerHTML + '限定 ';
+                        islimit = true;
+                    }
+                    bottomtd.innerHTML = bottomtd.innerHTML + '"' + this.proTagText + '"';
+                }
+                if (!islimit) {
+                    bottomtd.innerHTML = "无限定条件，全部" + Mapdata.indexs.length + "条数据";
+                } else {
+                    bottomtd.innerHTML = bottomtd.innerHTML + "，筛选到" + Mapdata.indexs.length + "条";
+                }
+            },
+            tagSelect: function (type, tag, text) {
+                this.updateTags(type, tag);
+                if (type === "pro") {
+                    this.proTagStatus = tag;
+                    this.proTagText = text;
+                } else if (type === "con") {
+                    this.conTagStatus = tag;
+                    this.conTagText = text;
+                } else if (type === "item") {
+                    this.itemStatus = tag;
+                }
+                if (type === "pro" || type === "con") {
+                    Mapdata.tagFilter(this.proTagStatus, this.conTagStatus);
+                    this.updateMap();
+                    this.updateBottom();
+                } else if (type === "item") {
+                    //alert("将会在地图上打开：" + text);
+                }
+            },
+            txtSearch: function (islimit) {
+                this.searchType = islimit;
+                if (islimit) {
+                    Mapdata.tagFilter(this.proTagStatus, this.conTagStatus);
+                } else {
+                    Mapdata.tagFilter("ALL", "ALL");
+                }
+                var titletxt = document.getElementById("titlein").value;
+                titletxt = this.txtcheck(titletxt);
+                this.searchTitle = titletxt;
+                if (titletxt !== "") {
+                    Mapdata.searchFilter("title", titletxt);
+                }
+                var authortxt = document.getElementById("authorin").value;
+                authortxt = this.txtcheck(authortxt);
+                this.searchAuthor = authortxt;
+                if (authortxt !== "") {
+                    Mapdata.searchFilter("author", authortxt);
+                }
+                var locationtxt = document.getElementById("locationin").value;
+                locationtxt = this.txtcheck(locationtxt);
+                this.searchLocation = locationtxt;
+                if (locationtxt !== "") {
+                    Mapdata.searchFilter("location", locationtxt);
+                }
+                this.updateMap();
+                this.updateSearch();
+                this.updateTags("item", "ALL");
+                //                        alert("T=[" + this.searchTitle + "]A=[" + this.searchAuthor + "]L=[" + this.searchLocation + "][" + this.searchType + "]");
+            },
+            txtcheck: function (txt) {
+                if (txt === null) {
+                    return "";
+                }
+                return txt.replace(" ", "");
+            }
+        };
+        UIcontrol.initMap();
+
+        window.onresize = function () {
+            UIcontrol.reSizeDivs();
+            setTimeout("UIcontrol.reDrawMap()", 501);
+        };
+    </script>
+
+    [markdown] ##### 0504更新：当前收录书籍已超过** 130 **本，其中有** 102 **本完成地图定位。 ##### 如果想集中浏览已录入的书籍，请访问[【荐书清单】](http://lookcn.org/book-index/)
+    *** [/markdown]
+
+    <strong>以下是无法在地图上准确定位的书籍，</strong><strong><a href="http://lookcn.org/series-books-index/">需要图集导览请点击下图</a>：</strong>
+
+    <p>
+        <a href="http://lookcn.org/series-books-index/"><img class="size-full wp-image-2976 aligncenter" src="http://lookcn.org/wp-content/uploads/2017/06/导览1.jpg" alt="图集导览"  width="400"></a></p>
+
+    [markdown] **[ 《三联书店“乡土中国”丛书》 ](https://www.douban.com/doulist/36256/)** | @山小菌/@小车 | **[ 《中国古典园林史》 ](https://book.douban.com/subject/3613867/)**
+    | @谢利军 | 全国 **[ 《穿墙透壁》 ](https://book.douban.com/subject/4082434/)** | @Atlas | 全国 **[ 《三联书店“乡土记忆”丛书（仙霞古道）》 ](https://www.douban.com/doulist/305188/)**
+    | @僧盐 | **[ 《中国古建筑二十讲》 ](https://book.douban.com/subject/1051370/)** | @僧盐 | 全国 **[ 《中国小品建筑十讲》 ](https://book.douban.com/subject/1032349/)**
+    | @僧盐 | 北京 **[ 《中国古建筑名词图解辞典》 ](https://book.douban.com/subject/5440595/)** | @僧盐 | 全国 **[ 《晚清碎影》 ](https://book.douban.com/subject/3709487/)**
+    | @小车 | 北京/广州/福州 **[ 《壹玖壹壹》 ](https://book.douban.com/subject/6732223/)** | @百鬼夜行 | **[ 《火车上的中国人》 ](https://book.douban.com/subject/2228784/)**
+    | @百鬼夜行 | **[ 《西域探险考察大系丛书》 ](https://book.douban.com/series/4555)** | @百鬼夜行 | **[ 《Chinese Domestic Furniture in Photographs
+    and Measured Drawings》 ](https://book.douban.com/subject/3297168/)** | @水田英松 | 全国 **[ 《香典》 ](https://book.douban.com/subject/4286985/)**
+    | @掌灯 | 全国 **[ 《一章木椅》 ](https://book.douban.com/subject/3071208/)** | @子文东 | 全国 **[ 《中国文物地图集丛书》 ](https://book.douban.com/series/10836)**
+    | @NAZI | **[ 《中国古建筑文化之旅》 ](https://book.douban.com/series/2323)** | @照天 | **[ 《中国铁道之旅丛书》 ](https://site.douban.com/126922/widget/notes/4986652/note/528783913/)**
+    | @Scania | **[ 《清华大学建筑五书系列之中国古代建筑装饰五书》 ](https://book.douban.com/subject/26948877/)** | | 全国 **[ 《杜甫的五城》 ](https://book.douban.com/subject/3191866/)**
+    | @小车 | **[ 《体国经野之道》 ](https://book.douban.com/subject/3620169/)** | @小车 | **[ 《浪迹中国》 ](https://book.douban.com/subject/1101638/)**
+    | @小车 | **[ 《中国古建筑地图丛书》 ](https://book.douban.com/series/32451)** | | **[ 《王世襄集：锦灰堆》 ](https://book.douban.com/subject/25776749/)**
+    | @百鬼夜行 | **[ 《画为心声》 ](https://book.douban.com/subject/5948181/)** | @僧盐 | 全国 **[ 《永诀的建筑》 ](https://book.douban.com/subject/6072803/)**
+    | | 全国 **[ 《东北游记》 ](https://book.douban.com/subject/26828349/)** | | 东三省 [/markdown]
+
+    <span style="color: rgb(128, 128, 128);">注：</span>
+    <span style="color: rgb(128, 128, 128);"> 1. 这些书中有些评价人数极少，但确实是推荐人读过认为不错的。此外评分不高但仍然值得参考的也会入选，有些不那么特别好看的书一样可能很有趣。</span>
+    <span style="color: rgb(128, 128, 128);"> 2. 有些书买不到了，我们也是看PDF版，考虑版权因素就不公开分享了，有需要的请留言给我们。</span>
+    <span style="color: rgb(128, 128, 128);"> 3. 欢迎出版社把大家还不知道的新书推荐给我们，只要保证品质，我们很乐于介绍。</span>
+
+    <p style="text-align: center;"><strong>有游记和书籍想推荐？想询问具体的旅行信息？快来和小冬特聊天吧！</strong><a href="http://lookcn.org/wp-content/uploads/2017/06/dont-panic.jpg"><img class="size-full wp-image-2976 aligncenter" src="http://lookcn.org/wp-content/uploads/2017/06/%E6%8E%A8%E8%8D%902.jpg" alt="点我呀！" width="100"></a></p>
+
+</body>
+
+</html>
