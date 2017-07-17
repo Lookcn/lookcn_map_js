@@ -954,7 +954,7 @@ var UIcontrol = {
             authordiv.style.height = "25px";
             authordiv.style.lineHeight = "25px";
             authordiv.style.fontSize = "12px";
-            authordiv.innerHTML = self.search_author_text;
+            authordiv.innerHTML = window.search_author_text;
             var authorinput = document.createElement("input");
             authorinput.setAttribute("type", "text");
             authorinput.setAttribute("id", "authorin");
