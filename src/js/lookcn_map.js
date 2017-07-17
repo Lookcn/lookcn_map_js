@@ -780,9 +780,12 @@ var UIcontrol = {
                 marker.bindPopup(popdiv.outerHTML, {
                     minWidth: 180,
                     maxWidth: 180
-                }).on('popupopen', function (popup) {
-                    var popupopen_img = popup.popup._contentNode.getElementsByTagName('img')[0];
-                    popupopen_img.setAttribute("src", popupopen_img.alt);
+                }).on({
+                    popupopen: function(popup) {
+                        var popupopen_img = popup.popup._contentNode.getElementsByTagName('img')[0];
+                        popupopen_img.setAttribute("src", popupopen_img.alt);
+                    },
+                    mouseover: marker._openPopup
                 });
                 this.markers.addLayer(marker);
             }
