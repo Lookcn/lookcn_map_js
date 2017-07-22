@@ -1,6 +1,18 @@
 if (typeof this.search_author_text === 'undefined') {
     var search_author_text = "作者："
 }
+var DEFAULT_MAP_CONFIG = {minZoom: 3, maxZoom: 16, zoom: 4}
+if (typeof this.mapConfig === 'undefined') {
+    var mapConfig = DEFAULT_MAP_CONFIG
+}
+else {
+    for (var config in DEFAULT_MAP_CONFIG) {
+        if (typeof this.mapConfig[config] === 'undefined') {
+            this.mapConfig[config] = DEFAULT_MAP_CONFIG[config]
+        }
+    }
+}
+
 var Mapdata = {
     addressPoints: this.address_points,
     indexs: null,
@@ -640,13 +652,13 @@ var UIcontrol = {
             'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
                 //'http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineStreetColor/MapServer/tile/{z}/{y}/{x}', {
                 //<a href="http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineStreetColor/MapServer">ArcGIS</a>
-                minZoom: 3,
-                maxZoom: 16,
+                minZoom: window.mapConfig.minZoom,
+                maxZoom: window.mapConfig.maxZoom,
                 attribution: '<a href="http://ditu.amap.com/">高德地图</a> &copy;'
             });
         this.map = L.map('map', {
             center: L.latLng(36.69, 107.34),
-            zoom: 4,
+            zoom: window.mapConfig.zoom,
             layers: [tiles]
         });
         L.control.scale().addTo(this.map);
