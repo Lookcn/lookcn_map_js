@@ -747,26 +747,11 @@ var UIcontrol = {
             this.markers = L.markerClusterGroup();
             //                    alert("更新结果"+Mapdata.indexs.length);
             var popdiv = document.createElement("div");
-            popdiv.style.position = "relative";
-            popdiv.style.borderTop = "7px solid #ffffff";
-            popdiv.style.cursor = "pointer";
-            popdiv.style.maxHeight = "150px";
-            popdiv.style.overflowY = "hidden";
+            popdiv.setAttribute('class', 'popover-inner-content');
             var popimg = document.createElement("img");
-            popimg.setAttribute("width", "180");
-            popimg.setAttribute("alt", "''");
-            popimg.setAttribute("src", "''");
+            popimg.setAttribute('width', 180);
             var poptitle = document.createElement("div");
-            poptitle.style.position = "absolute";
-            poptitle.style.width = "180px";
-            poptitle.style.height = "50px";
-            poptitle.style.left = "0";
-            poptitle.style.bottom = "0";
-            poptitle.style.right = "0";
-            poptitle.style.textAlign = "center";
-            poptitle.style.lineHeight = "22px";
-            poptitle.style.backgroundColor = "rgba(256,256,256,0.6)";
-            poptitle.style.color = "#aa00aa";
+            poptitle.setAttribute('class', 'popover-inner-title');
             for (var i = 0; i < Mapdata.indexs.length; i++) {
                 var a = Mapdata.addressPoints[Mapdata.indexs[i]];
                 if (a.type === 1) {
@@ -786,15 +771,19 @@ var UIcontrol = {
                     });
                 }
                 popimg.alt = a.content;
-                poptitle.innerHTML = a.title + "&nbsp;&nbsp;-by: " + a.author;
+                poptitle.innerHTML = "<span>" + a.title + "<br>" + a.author + "</span>";
                 popdiv.setAttribute("onclick", "window.open('" + a.url + "','_blank');");
-                popdiv.innerHTML = popimg.outerHTML + poptitle.outerHTML;
-                marker.bindPopup(popdiv.outerHTML, {
+                popdiv.innerHTML = popimg.outerHTML
+                marker.bindPopup(popdiv.outerHTML + poptitle.outerHTML, {
                     minWidth: 180,
-                    maxWidth: 180
+                    maxWidth: 180,
+                    closeButton: false
                 }).on({
                     popupopen: function(popup) {
-                        var popupopen_img = popup.popup._contentNode.getElementsByTagName('img')[0];
+                        var popupContentNode = popup.popup._contentNode;
+                        popupContentNode.setAttribute('class', 'popover-content');
+                        popupContentNode.removeAttribute('style');
+                        var popupopen_img = popupContentNode.getElementsByTagName('img')[0];
                         popupopen_img.setAttribute("src", popupopen_img.alt);
                     },
                     mouseover: marker._openPopup
