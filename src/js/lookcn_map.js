@@ -754,22 +754,17 @@ var UIcontrol = {
             poptitle.setAttribute('class', 'popover-inner-title');
             for (var i = 0; i < Mapdata.indexs.length; i++) {
                 var a = Mapdata.addressPoints[Mapdata.indexs[i]];
-                if (a.type === 1) {
-                    var marker = L.marker(new L.LatLng(a.lat, a.lng), {
-                        title: a.alt,
-                        icon: this.Icons.markerIcon1
-                    });
-                } else if (a.type === 2) {
-                    var marker = L.marker(new L.LatLng(a.lat, a.lng), {
-                        title: a.alt,
-                        icon: this.Icons.markerIcon2
-                    });
+                if (a.color === 'blue') {
+                    var icon = this.Icons.markerIcon1
+                } else if (a.color === 'green') {
+                    var icon = this.Icons.markerIcon2
                 } else {
-                    var marker = L.marker(new L.LatLng(a.lat, a.lng), {
-                        title: a.alt,
-                        icon: this.Icons.markerIcon3
-                    });
+                    var icon = this.Icons.markerIcon3
                 }
+                var marker = L.marker(new L.LatLng(a.lat, a.lng), {
+                    title: a.alt,
+                    icon: icon
+                });
                 popimg.alt = a.content;
                 poptitle.innerHTML = "<span>" + a.title + "<br>" + a.author + "</span>";
                 popdiv.setAttribute("onclick", "window.open('" + a.url + "','_blank');");
