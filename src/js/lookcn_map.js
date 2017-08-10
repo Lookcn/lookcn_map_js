@@ -568,19 +568,19 @@ var UIcontrol = {
     markers: null,
     Icons: {
         markerIcon1: L.icon({
-            iconUrl: 'http://lookcn.org/wp-content/uploads/2017/08/map-icon-test-5.png',
+            iconUrl: 'http://lookcn.org/wp-content/uploads/2017/03/marker-icon-type1.png',
             iconSize: [30, 40],
             iconAnchor: [15, 34],
             popupAnchor: [0, -16]
         }),
         markerIcon2: L.icon({
-            iconUrl: 'http://lookcn.org/wp-content/uploads/2017/08/map-icon-test-5.png',
+            iconUrl: 'http://lookcn.org/wp-content/uploads/2017/03/marker-icon-type2.png',
             iconSize: [30, 40],
             iconAnchor: [15, 34],
             popupAnchor: [0, -16]
         }),
         markerIcon3: L.icon({
-            iconUrl: 'http://lookcn.org/wp-content/uploads/2017/08/map-icon-test-5.png',
+            iconUrl: 'http://lookcn.org/wp-content/uploads/2017/03/marker-icon-type3.png',
             iconSize: [30, 40],
             iconAnchor: [15, 34],
             popupAnchor: [0, -16]
