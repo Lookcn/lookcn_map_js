@@ -568,19 +568,19 @@ var UIcontrol = {
     markers: null,
     Icons: {
         markerIcon1: L.icon({
-            iconUrl: 'http://lookcn.org/wp-content/uploads/2017/08/map-icon-test-5.png',
+            iconUrl: 'https://lookcn.org/wp-content/uploads/2017/08/map-icon-test-5.png',
             iconSize: [30, 40],
             iconAnchor: [15, 34],
             popupAnchor: [0, -16]
         }),
         markerIcon2: L.icon({
-            iconUrl: 'http://lookcn.org/wp-content/uploads/2017/08/map-icon-test-5.png',
+            iconUrl: 'https://lookcn.org/wp-content/uploads/2017/08/map-icon-test-5.png',
             iconSize: [30, 40],
             iconAnchor: [15, 34],
             popupAnchor: [0, -16]
         }),
         markerIcon3: L.icon({
-            iconUrl: 'http://lookcn.org/wp-content/uploads/2017/08/map-icon-test-5.png',
+            iconUrl: 'https://lookcn.org/wp-content/uploads/2017/08/map-icon-test-5.png',
             iconSize: [30, 40],
             iconAnchor: [15, 34],
             popupAnchor: [0, -16]
@@ -649,12 +649,10 @@ var UIcontrol = {
         }
         this.reSizeDivs();
         var tiles = L.tileLayer(
-            'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
-                //'http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineStreetColor/MapServer/tile/{z}/{y}/{x}', {
-                //<a href="http://cache1.arcgisonline.cn/ArcGIS/rest/services/ChinaOnlineStreetColor/MapServer">ArcGIS</a>
+            'https://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
                 minZoom: window.mapConfig.minZoom,
                 maxZoom: window.mapConfig.maxZoom,
-                attribution: '<a href="http://ditu.amap.com/">高德地图</a> &copy;'
+                attribution: '<a href="https://ditu.amap.com/">高德地图</a> &copy;'
             });
         this.map = L.map('map', {
             center: L.latLng(36.69, 107.34),
@@ -795,7 +793,7 @@ var UIcontrol = {
         if (this.fullPageStatus === "NORM") {
             this.fullPageStatus = "FULL";
             divfullPageSlider.innerHTML =
-                '<img alt="适应屏幕" src="http://lookcn.org/wp-content/uploads/2017/03/renormal.png" width="30" height="30">';
+                '<img alt="适应屏幕" src="https://lookcn.org/wp-content/uploads/2017/03/renormal.png" width="30" height="30">';
             mainele.style.position = "fixed";
             mainele.style.top = "0";
             mainele.style.left = "0";
@@ -806,7 +804,7 @@ var UIcontrol = {
         } else {
             this.fullPageStatus = "NORM";
             divfullPageSlider.innerHTML =
-                '<img alt="正常页面" src="http://lookcn.org/wp-content/uploads/2017/03/full.png" width="30" height="30">';
+                '<img alt="正常页面" src="https://lookcn.org/wp-content/uploads/2017/03/full.png" width="30" height="30">';
             mainele.removeAttribute("style");
             html[0].style.overflowY = "auto";
         }
@@ -826,13 +824,13 @@ var UIcontrol = {
         if (this.rightBarStatus === "SHOW") {
             this.rightBarStatus = "HIDDEN";
             divrightBarSlider.innerHTML =
-                '<img alt="展开索引栏" src="http://lookcn.org/wp-content/uploads/2017/03/open.png" width="30" height="30">';
+                '<img alt="展开索引栏" src="https://lookcn.org/wp-content/uploads/2017/03/open.png" width="30" height="30">';
             divmap.style.width = (parw - 2) + "px";
             divrightBar.style.marginRight = "-" + (clw - 2) + "px";
         } else {
             this.rightBarStatus = "SHOW";
             divrightBarSlider.innerHTML =
-                '<img alt="关闭索引栏" src="http://lookcn.org/wp-content/uploads/2017/03/close.png" width="30" height="30">';
+                '<img alt="关闭索引栏" src="https://lookcn.org/wp-content/uploads/2017/03/close.png" width="30" height="30">';
             divmap.style.width = (parw - clw) + "px";
             divrightBar.style.marginRight = "0px";
         }
@@ -866,7 +864,7 @@ var UIcontrol = {
                         li2.setAttribute("onclick", "UIcontrol.tagSelect('con_open','" + Mapdata.ConCou[i1]
                             .child[i2].tag + "','" + Mapdata.ConCou[i1].child[i2].text + "');");
                         li2.innerHTML = "<img name='img_con' id='img_con_" + Mapdata.ConCou[i1].child[i2].tag +
-                            "' src='http://lookcn.org/wp-content/uploads/2017/06/tag2_c1.png' />" + Mapdata
+                            "' src='https://lookcn.org/wp-content/uploads/2017/06/tag2_c1.png' />" + Mapdata
                             .ConCou[i1].child[i2].text // + "(" + Mapdata.ConCou[i1].child[i2].count + ")";
                         ul2.appendChild(li2);
                         if (Mapdata.ConCou[i1].child[i2].child) {
@@ -1059,14 +1057,14 @@ var UIcontrol = {
                 if (("ul_con_" + tag).indexOf(uls[i].id) > -1) {
                     if (uls[i].style.display === "block") {
                         uls[i].style.display = "none";
-                        imgs[i].src = "http://lookcn.org/wp-content/uploads/2017/06/tag2_c1.png";
+                        imgs[i].src = "https://lookcn.org/wp-content/uploads/2017/06/tag2_c1.png";
                     } else {
                         uls[i].style.display = "block";
-                        imgs[i].src = "http://lookcn.org/wp-content/uploads/2017/06/tag2_o1.png";
+                        imgs[i].src = "https://lookcn.org/wp-content/uploads/2017/06/tag2_o1.png";
                     }
                 } else {
                     uls[i].style.display = "none";
-                    imgs[i].src = "http://lookcn.org/wp-content/uploads/2017/06/tag2_c1.png";
+                    imgs[i].src = "https://lookcn.org/wp-content/uploads/2017/06/tag2_c1.png";
                 }
             }
         } else {
