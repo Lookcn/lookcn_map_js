@@ -766,7 +766,7 @@ var UIcontrol = {
                     icon: icon
                 });
                 popimg.alt = a.content;
-                poptitle.innerHTML = "<span>" + a.title + "<br>" + a.author + "</span>";
+                poptitle.innerHTML = "<a target=\"_blank\" href=\"" + a.url + "\">" + a.title + "<br>" + a.author + "</a>";
                 popdiv.setAttribute("onclick", "window.open('" + a.url + "','_blank');");
                 popdiv.innerHTML = popimg.outerHTML
                 marker.bindPopup(popdiv.outerHTML + poptitle.outerHTML, {
